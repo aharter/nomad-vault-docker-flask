@@ -13,7 +13,6 @@ terraform {
       version = "~> 4.16"
     }
   }
-
   required_version = ">= 1.2.0"
 }
 
@@ -238,7 +237,6 @@ resource "aws_instance" "server" {
     retry_join                = local.retry_join
     nomad_version             = var.nomad_version
   })
-
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 
   metadata_options {
@@ -321,15 +319,13 @@ resource "aws_instance" "vault" {
     "Name" = "${var.name}-vault"
   }
 
- root_block_device {
+  root_block_device {
     volume_type           = "gp2"
     volume_size           = var.root_block_device_size
     delete_on_termination = "true"
   }
-
-iam_instance_profile = aws_iam_instance_profile.instance_profile.name
+  iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 }
-
 
 resource "aws_iam_instance_profile" "instance_profile" {
   name_prefix = var.name

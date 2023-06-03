@@ -1,10 +1,11 @@
 terraform {
-  #cloud {
-  #organization = "nasenblick"
-  #workspaces {
-  #name = "nomad-vault-react"
-  #}
-  #}
+  cloud {
+    organization = "nasenblick"
+
+    workspaces {
+      name = "nomad-vault-react"
+    }
+  }
 
   required_providers {
     aws = {

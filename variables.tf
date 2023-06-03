@@ -57,3 +57,8 @@ variable "vault_version" {
   description = "The version of the Vault binary to install."
   default     = "1.13.2"
 }
+
+variable "aws_ssh_public_key" {
+  description = "SSH public key for accessing the instance"
+  type        = string
+}

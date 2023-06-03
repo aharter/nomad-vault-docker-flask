@@ -3,7 +3,7 @@ terraform {
     organization = "nasenblick"
 
     workspaces {
-      name = "nomad-vault-react"
+      name = "nomad-vault"
     }
   }
 
@@ -176,12 +176,6 @@ resource "tls_private_key" "private_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
-
-variable "aws_ssh_public_key" {
-  description = "SSH public key for accessing the instance"
-  type        = string
-}
-
 
 resource "aws_key_pair" "generated_key" {
   key_name   = "tf-key"

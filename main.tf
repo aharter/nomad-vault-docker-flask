@@ -177,6 +177,12 @@ resource "tls_private_key" "private_key" {
   rsa_bits  = 4096
 }
 
+variable "aws_ssh_public_key" {
+  description = "SSH public key for accessing the instance"
+  type        = string
+}
+
+
 resource "aws_key_pair" "generated_key" {
   key_name   = "tf-key"
   public_key = var.aws_ssh_public_key

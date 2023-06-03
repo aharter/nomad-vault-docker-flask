@@ -7,6 +7,9 @@ exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 
 VAULT_VERSION="1.13.2"
 VAULT_DOWNLOAD="https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip"
 
+# Install jq
+sudo apt-get install jq
+
 # Install Vault
 curl -L ${VAULT_DOWNLOAD} > vault.zip
 sudo unzip vault.zip -d /usr/local/bin

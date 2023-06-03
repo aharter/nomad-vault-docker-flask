@@ -1,3 +1,7 @@
+output "private_key_pem" {
+  value = aws_key_pair.generated_key.key_pair_id
+}
+
 output "nomad_ip" {
   value = "http://${aws_instance.server[0].public_ip}:4646/ui"
 }

@@ -328,6 +328,11 @@ resource "aws_instance" "vault" {
     private_key = tls_private_key.private_key.private_key_pem
     host        = self.public_ip
   }
+
+tags = {
+  "Name" = "${var.name}-vault-${count.index}"
+}
+
 iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 }
 

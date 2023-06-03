@@ -316,9 +316,9 @@ resource "aws_instance" "vault" {
     host        = self.public_ip
   }
 
-tags = {
-  "Name" = "${var.name}-vault-${count.index}"
-}
+  tags = {
+    "Name" = "${var.name}-vault"
+  }
 
  root_block_device {
     volume_type           = "gp2"

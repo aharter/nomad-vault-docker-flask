@@ -285,13 +285,6 @@ resource "aws_instance" "client" {
     delete_on_termination = "true"
   }
 
-  /*ebs_block_device {
-    device_name           = "/dev/xvdd"
-    volume_type           = "gp2"
-    volume_size           = "50"
-    delete_on_termination = "true"
-  }*/
-
   provisioner "remote-exec" {
     inline = ["sudo mkdir -p /ops", "sudo chmod 777 -R /ops"]
   }
@@ -332,6 +325,12 @@ resource "aws_instance" "vault" {
 tags = {
   "Name" = "${var.name}-vault-${count.index}"
 }
+
+ root_block_device {
+    volume_type           = "gp2"
+    volume_size           = var.root_block_device_size
+    delete_on_termination = "true"
+  }
 
 iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 }

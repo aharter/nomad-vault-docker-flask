@@ -242,7 +242,6 @@ resource "aws_instance" "server" {
     cloud_env                 = "aws"
     retry_join                = local.retry_join
     nomad_version             = var.nomad_version
-    #additional_file_content   = file("shared/data-scripts/user-data-consul-template.sh")
   })
 
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
@@ -307,7 +306,6 @@ resource "aws_instance" "client" {
     cloud_env                 = "aws"
     retry_join                = local.retry_join
     nomad_version             = var.nomad_version
-    #additional_file_content   = file("shared/data-scripts/user-data-consul-template.sh")
   })
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 

@@ -4,16 +4,14 @@ set -e
 
 exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
-# Download and install Consul Template
-CONSUL_TEMPLATE_VERSION="0.32.0"
-CONSUL_TEMPLATE_DOWNLOAD="https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip"
-curl -L ${CONSUL_TEMPLATE_DOWNLOAD} > consul-template.zip
+# Install jq
+sudo apt-get install jq
+
+# Install consul-template
+curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.32.0_linux_amd64.zip > consul-template.zip
 sudo unzip consul-template.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
-
-# Install jq
-sudo apt-get install jq
 
 # Install Vault
 VAULT_VERSION="1.13.2"

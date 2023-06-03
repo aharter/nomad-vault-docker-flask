@@ -180,7 +180,7 @@ resource "tls_private_key" "private_key" {
 resource "aws_key_pair" "generated_key" {
   key_name   = "tf-key"
   public_key = var.aws_ssh_public_key
-  private_key = var.aws_ssh_private_key
+  #private_key = var.aws_ssh_private_key
   #public_key = tls_private_key.private_key.public_key_openssh
 }
 

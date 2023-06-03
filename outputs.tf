@@ -1,7 +1,7 @@
-output "private_key_pem" {
-  description = "Private Key"
-  value = base64encode(tls_private_key.private_key.private_key_pem)
-}
+# output "private_key_pem" {
+#   description = "Private Key"
+#   value = base64encode(tls_private_key.private_key.private_key_pem)
+# }
 
 output "nomad_ip" {
   description = "Nomad UI Address"

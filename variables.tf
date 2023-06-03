@@ -30,12 +30,12 @@ variable "vault_instance_type" {
 
 variable "server_count" {
   description = "The number of servers to provision."
-  default     = "1"
+  default     = "0"
 }
 
 variable "client_count" {
   description = "The number of clients to provision."
-  default     = "1"
+  default     = "0"
 }
 
 variable "vault_count" {

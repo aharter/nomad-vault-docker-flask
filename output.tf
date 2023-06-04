@@ -8,6 +8,11 @@ output "nomad_ip" {
    value = "http://${aws_instance.vault[0].public_ip}"
  }
 
+  output "private_key_output"{
+    description = "Private Key for SSH Access"
+    value = tls_private_key.private_key.private_key_pem
+  }
+
 output "IP_Addresses" {
   value = <<CONFIGURATION
 

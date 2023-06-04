@@ -60,7 +60,7 @@ variable "vault_version" {
 
 variable "private_key_output"{
   description = "SSH privat key for accessing instances"
-  default = tls_private_key.private_key.private_key_pem
+  default = "empty"
 }
 
 # variable "aws_ssh_public_key" {

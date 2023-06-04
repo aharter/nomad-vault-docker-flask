@@ -58,7 +58,7 @@ variable "vault_version" {
   default     = "1.13.2"
 }
 
-variable "aws_ssh_public_key" {
-  description = "SSH public key for accessing the instance"
-  type        = string
-}
+#variable "aws_ssh_public_key" {
+#  description = "SSH public key for accessing the instance"
+#  type        = string
+#}

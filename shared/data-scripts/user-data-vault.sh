@@ -5,17 +5,20 @@ set -e
 exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 # Install jq
+echo "Starting jq install"
 sudo apt-get install jq
 
 # Install consul-template
+echo "Starting Consul-Template Installation"
 curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.32.0_linux_amd64.zip > consul-template.zip
 sudo unzip consul-template.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
 
 # Install Vault
-VAULT_VERSION="1.13.2"
-VAULT_DOWNLOAD="https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip"
+echo "Starting Vault Installation"
+VAULT_VERSION=${VAULT_VERSION}
+VAULT_DOWNLOAD=https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
 curl -L ${VAULT_DOWNLOAD} > vault.zip
 sudo unzip vault.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/vault
@@ -49,6 +52,7 @@ sudo chown root:root /usr/local/bin/vault
 EOF
 
 # Start Vault service
+echo "Starting Vault"
 sudo systemctl enable vault
 sudo systemctl start vault
 
@@ -63,3 +67,4 @@ sudo systemctl start vault
 
 # Clean up temporary files
 rm /tmp/vault_init_output
+echo "Concluded Installation"

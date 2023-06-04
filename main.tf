@@ -337,6 +337,9 @@ resource "aws_instance" "vault" {
   }
 
   user_data = templatefile("shared/data-scripts/user-data-vault.sh", {
+    VAULT_VERSION              = var.VAULT_VERSION
+    VAULT_DOWNLOAD             = var.VAULT_DOWNLOAD
+    VAULT_TOKEN                = var.VAULT_TOKEN
     #server_count              = var.server_count
     #region                    = var.region
     #cloud_env                 = "aws"

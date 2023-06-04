@@ -53,9 +53,19 @@ variable "nomad_version" {
   default     = "1.5.0"
 }
 
-variable "vault_version" {
+variable "VAULT_VERSION" {
   description = "The version of the Vault binary to install."
   default     = "1.13.2"
+}
+
+variable "VAULT_DOWNLOAD" {
+  description = "The version of the Vault binary to install."
+  default     = "empty"
+}
+
+variable "VAULT_TOKEN" {
+  description = "The version of the Vault binary to install."
+  default     = "empty"
 }
 
 # variable "private_key_output"{

@@ -58,10 +58,10 @@ variable "vault_version" {
   default     = "1.13.2"
 }
 
-variable "private_key_output"{
-  description = "SSH privat key for accessing instances"
-  default = "empty"
-}
+# variable "private_key_output"{
+#   description = "SSH privat key for accessing instances"
+#   default = "empty"
+# }
 
 # variable "aws_ssh_public_key" {
 #   description = "SSH public key for accessing the instance"

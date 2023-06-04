@@ -6,7 +6,7 @@ exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 
 
 # Install jq
 echo "Starting jq install"
-sudo apt-get install jq
+sudo snap install jq
 
 # Install consul-template
 echo "Starting Consul-Template Installation"

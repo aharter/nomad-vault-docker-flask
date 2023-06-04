@@ -92,6 +92,8 @@ sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/nomad.hcl
 sudo cp $CONFIGDIR/nomad.hcl $NOMADCONFIGDIR
 sudo cp $CONFIGDIR/nomad.service /etc/systemd/system/nomad.service
 
+echo "Nomad configured"
+
 sudo systemctl enable nomad.service
 sudo systemctl start nomad.service
 
@@ -109,10 +111,12 @@ for i in {1..9}; do
 done
 
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
+echo "Nomad restarted"
 
 # Add hostname to /etc/hosts
 
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
+echo "Hostname Added"
 
 # Add Docker bridge network IP to /etc/resolv.conf (at the top)
 
@@ -120,11 +124,14 @@ echo "nameserver $DOCKER_BRIDGE_IP_ADDRESS" | sudo tee /etc/resolv.conf.new
 cat /etc/resolv.conf | sudo tee --append /etc/resolv.conf.new
 sudo mv /etc/resolv.conf.new /etc/resolv.conf
 
+echo "Docker bridge network ip added"
+
 # Set env vars
 echo "export NOMAD_ADDR=http://$IP_ADDRESS:4646" | sudo tee --append /home/$HOME_DIR/.bashrc
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --append /home/$HOME_DIR/.bashrc
 
 # Server setup phase finish -----------------------------------
+echo "Server setup finished"
 
 # Install consul-template
 echo "Starting Consul-Template Installation"
@@ -132,3 +139,5 @@ sudo curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-templa
 sudo unzip consul-template.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
+
+echo "Consule-Template installed"

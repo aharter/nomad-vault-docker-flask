@@ -16,6 +16,7 @@ HOME_DIR="ubuntu"
 CLOUD_ENV=${cloud_env}
 
 # Install phase begin ---------------------------------------
+echo "Beginning Installation"
 
 # Install dependencies
 case $CLOUD_ENV in
@@ -47,10 +48,13 @@ sudo apt-get update
 sudo apt-get install -y unzip tree redis-tools jq curl tmux
 sudo apt-get clean
 
+echo "Dependencies installed"
 
 # Disable the firewall
 
 sudo ufw disable || echo "ufw not installed"
+
+echo "Firewall disabled"
 
 # Download and install Nomad
 curl -L $NOMADDOWNLOAD > nomad.zip
@@ -64,6 +68,8 @@ sudo chmod 755 $NOMADCONFIGDIR
 sudo mkdir -p $NOMADDIR
 sudo chmod 755 $NOMADDIR
 
+echo "Nomad downloaded and installed"
+
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
 sudo apt-get install -y apt-transport-https ca-certificates gnupg2 
@@ -72,11 +78,15 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$${d
 sudo apt-get update
 sudo apt-get install -y docker-ce
 
+echo "Docker Installed"
+
 # Java
 sudo add-apt-repository -y ppa:openjdk-r/ppa
 sudo apt-get update 
 sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+
+echo "Java Installed"
 
 # CNI plugins
 curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/releases/download/v1.0.0/cni-plugins-linux-$( [ $(uname -m) = aarch64 ] && echo arm64 || echo amd64)"-v1.0.0.tgz
@@ -88,6 +98,7 @@ echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-ip6tables
 echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-iptables
 
 # Install phase finish ---------------------------------------
+echo "Install Phase completed"
 
 RETRY_JOIN="${retry_join}"
 DOCKER_BRIDGE_IP_ADDRESS=(`ifconfig docker0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`)
@@ -99,6 +110,8 @@ sudo cp $CONFIGDIR/nomad.service /etc/systemd/system/nomad.service
 
 sudo systemctl enable nomad.service
 sudo systemctl start nomad.service
+
+echo "Nomad restarting"
 
 # Wait for Nomad to restart
 for i in {1..9}; do
@@ -115,9 +128,13 @@ done
 
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
 
+echo "Nomad restarted"
+
 # Add hostname to /etc/hosts
 
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
+
+echo "Hostname added"
 
 # Add Docker bridge network IP to /etc/resolv.conf (at the top)
 
@@ -125,10 +142,13 @@ echo "nameserver $DOCKER_BRIDGE_IP_ADDRESS" | sudo tee /etc/resolv.conf.new
 cat /etc/resolv.conf | sudo tee --append /etc/resolv.conf.new
 sudo mv /etc/resolv.conf.new /etc/resolv.conf
 
+echo "Docker bridge network ip added"
+
 # Set env vars
 echo "export NOMAD_ADDR=http://$IP_ADDRESS:4646" | sudo tee --append /home/$HOME_DIR/.bashrc
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --append /home/$HOME_DIR/.bashrc
 
+echo "Server Setup finished"
 # Server setup phase finish -----------------------------------
 
 # Install consul-template
@@ -136,3 +156,5 @@ curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.
 sudo unzip consul-template.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
+
+echo "Consul-Template installed"

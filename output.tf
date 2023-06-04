@@ -11,6 +11,7 @@ output "nomad_ip" {
   output "private_key_output"{
     description = "Private Key for SSH Access"
     value = tls_private_key.private_key.private_key_pem
+    sensitive = true
   }
 
 output "IP_Addresses" {

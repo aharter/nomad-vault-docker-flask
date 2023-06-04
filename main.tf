@@ -326,6 +326,24 @@ resource "aws_instance" "vault" {
     volume_size           = var.root_block_device_size
     delete_on_termination = "true"
   }
+
+  provisioner "remote-exec" {
+    inline = ["sudo mkdir -p /ops", "sudo chmod 777 -R /ops"]
+  }
+
+  provisioner "file" {
+    source      = "shared"
+    destination = "/ops"
+  }
+
+  user_data = templatefile("shared/data-scripts/user-data-vault.sh", {
+    #server_count              = var.server_count
+    #region                    = var.region
+    #cloud_env                 = "aws"
+    #retry_join                = local.retry_join
+    #nomad_version             = var.nomad_version
+  })
+
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 }
 

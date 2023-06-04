@@ -63,7 +63,7 @@ variable "aws_ssh_public_key" {
   type        = string
 }
 
-variable "private_key_pem" {
+variable "private_key" {
   description = "SSH private key for accessing the instance"
   type        = string
 }

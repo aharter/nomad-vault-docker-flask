@@ -17,6 +17,8 @@ CLOUD_ENV=${cloud_env}
 
 # Install phase begin ---------------------------------------
 echo "Beginning Installation"
+sudo apt update
+sudo apt install unzip
 
 # Install dependencies
 case $CLOUD_ENV in

@@ -21,9 +21,7 @@ sudo chown root:root /usr/local/bin/consul-template
 
 # Install Vault
 echo "Starting Vault Installation"
-VAULT_VERSION=${VAULT_VERSION}
-VAULT_DOWNLOAD=https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
-curl -L ${VAULT_DOWNLOAD} > vault.zip
+curl -L https://releases.hashicorp.com/vault/1.13.2/vault_1.13.2_linux_amd64.zip > vault.zip
 sudo unzip vault.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/vault
 sudo chown root:root /usr/local/bin/vault

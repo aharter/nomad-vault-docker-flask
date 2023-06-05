@@ -4,6 +4,10 @@ set -e
 
 exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
+#Prepare instance
+sudo apt update
+sudo apt install unzip
+
 # Install jq
 echo "Starting jq install"
 sudo snap install jq
@@ -49,12 +53,12 @@ sudo chown root:root /usr/local/bin/vault
 # }
 
 # # Add any additional configuration parameters as needed
-EOF
+#EOF
 
 # Start Vault service
-echo "Starting Vault"
-sudo systemctl enable vault
-sudo systemctl start vault
+#echo "Starting Vault"
+#sudo systemctl enable vault
+#sudo systemctl start vault
 
 # Initialize Vault and retrieve the initial root token
 # VAULT_ADDR=http://127.0.0.1:8200
@@ -66,5 +70,5 @@ sudo systemctl start vault
 # echo "VAULT_ROOT_TOKEN=${VAULT_TOKEN}" | sudo tee /etc/vault/root_token
 
 # Clean up temporary files
-rm /tmp/vault_init_output
-echo "Concluded Installation"
+#rm /tmp/vault_init_output
+#echo "Concluded Installation"

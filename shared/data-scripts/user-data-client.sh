@@ -63,7 +63,7 @@ curl -L $NOMADDOWNLOAD > nomad.zip
 
 sudo unzip nomad.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/nomad
-sudo chown root:root  
+sudo chown root:root /usr/local/bin/nomad
 
 sudo mkdir -p $NOMADCONFIGDIR
 sudo chmod 755 $NOMADCONFIGDIR

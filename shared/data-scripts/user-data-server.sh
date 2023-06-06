@@ -26,8 +26,6 @@ case $CLOUD_ENV in
     echo "CLOUD_ENV: aws"
     sudo apt-get update && sudo apt-get install -y software-properties-common
     IP_ADDRESS=$(curl http://instance-data/latest/meta-data/local-ipv4)
-    echo "IP_ADDRESS:"
-    echo $IP_ADDRESS
     PUBLIC_IP=$(curl http://instance-data/latest/meta-data/public-ipv4)
     ;;
 
@@ -51,10 +49,6 @@ esac
 sudo apt-get update
 sudo apt-get install -y unzip tree redis-tools jq curl tmux
 sudo apt-get clean
-
-echo "IP_ADDRESS:"
-echo $IP_ADDRESS
-
 
 # Disable the firewall
 

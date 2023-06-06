@@ -84,14 +84,14 @@ echo "Starting Vault Server"
 sudo systemctl enable vault
 sudo systemctl start vault
 
-# Initialize Vault and retrieve the initial root token
-sudo vault operator init -key-shares=1 -key-threshold=1 > /tmp/vault_init_output
-export VAULT_TOKEN=$(grep "Initial Root Token:" /tmp/vault_init_output | awk '{print $NF}')
-echo "Concluded Vault Initialization"
+# # Initialize Vault and retrieve the initial root token
+# sudo vault operator init -key-shares=1 -key-threshold=1 > /tmp/vault_init_output
+# export VAULT_TOKEN=$(grep "Initial Root Token:" /tmp/vault_init_output | awk '{print $NF}')
+# echo "Concluded Vault Initialization"
 
-# Store the root token securely (you can modify this as per your requirements)
-echo "VAULT_ROOT_TOKEN=${VAULT_TOKEN}" | sudo tee /etc/vault/root_token
+# # Store the root token securely (you can modify this as per your requirements)
+# echo "VAULT_ROOT_TOKEN=${VAULT_TOKEN}" | sudo tee /etc/vault/root_token
 
-# Clean up temporary files
-rm /tmp/vault_init_output
-echo "Concluded Vault Configuration"
+# # Clean up temporary files
+# rm /tmp/vault_init_output
+# echo "Concluded Vault Configuration"

@@ -143,7 +143,7 @@ resource "aws_security_group" "vault_ingress" {
     from_port   = 8200
     to_port     = 8200
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.allowlist_ip]
   }
   ingress {
     from_port = 0

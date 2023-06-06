@@ -26,6 +26,8 @@ case $CLOUD_ENV in
     echo "CLOUD_ENV: aws"
     sudo apt-get update && sudo apt-get install -y software-properties-common
     IP_ADDRESS=$(curl http://instance-data/latest/meta-data/local-ipv4)
+    echo "IP_ADDRESS:"
+    echo $IP_ADDRESS
     PUBLIC_IP=$(curl http://instance-data/latest/meta-data/public-ipv4)
     ;;
 
@@ -81,6 +83,14 @@ sudo apt-get update
 sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
 
+# Install consul-template
+echo "Starting Consul-Template Installation"
+sudo curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.32.0_linux_amd64.zip > consul-template.zip
+sudo unzip consul-template.zip -d /usr/local/bin
+sudo chmod 0755 /usr/local/bin/consul-template
+sudo chown root:root /usr/local/bin/consul-template
+echo "Consule-Template installed"
+
 # Install phase finish ---------------------------------------
 
 echo "Install complete"
@@ -106,6 +116,7 @@ for i in {1..9}; do
     set +e
     sleep 1
     OUTPUT=$(nomad -v 2>&1)
+    echo $i
     if [ $? -ne 0 ]; then
         continue
     else
@@ -135,12 +146,3 @@ echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --appe
 
 # Server setup phase finish -----------------------------------
 echo "Server setup finished"
-
-# Install consul-template
-echo "Starting Consul-Template Installation"
-sudo curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.32.0_linux_amd64.zip > consul-template.zip
-sudo unzip consul-template.zip -d /usr/local/bin
-sudo chmod 0755 /usr/local/bin/consul-template
-sudo chown root:root /usr/local/bin/consul-template
-
-echo "Consule-Template installed"

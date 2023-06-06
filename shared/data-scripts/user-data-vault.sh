@@ -25,6 +25,7 @@ curl -L https://releases.hashicorp.com/vault/1.13.2/vault_1.13.2_linux_amd64.zip
 sudo unzip vault.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/vault
 sudo chown root:root /usr/local/bin/vault
+echo "Concluded Vault Installation"
 
 # Configure Vault as CA
 # sudo mkdir -p /etc/vault
@@ -69,4 +70,4 @@ sudo chown root:root /usr/local/bin/vault
 
 # Clean up temporary files
 #rm /tmp/vault_init_output
-#echo "Concluded Installation"
+#echo "Concluded Configuration"

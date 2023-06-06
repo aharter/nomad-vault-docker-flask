@@ -31,13 +31,11 @@ echo "Concluded Vault Installation"
 # Setup Vault Service
 echo "Starting Vault Service Setup"
 sudo touch /etc/systemd/system/vault.service
-
 cat <<EOF | sudo tee /etc/systemd/system/vault.service
 [Unit]
 Description=Vault service
 After=network.target
 ConditionFileNotEmpty=/etc/vault/config.hcl
-
 [Service]
 User=vault
 Group=vault
@@ -48,7 +46,6 @@ AmbientCapabilities=CAP_IPC_LOCK
 SecureBits=keep-caps
 NoNewPrivileges=yes
 KillSignal=SIGINT
-
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -60,12 +57,10 @@ cat <<EOF | sudo tee /etc/vault/config.hcl
 storage "file" {
   path = "/etc/vault/data"
 }
-
 listener "tcp" {
   address     = "127.0.0.1:8200"
   tls_disable = "true"
 }
-
 api_addr = "http://127.0.0.1:8200"
 cluster_addr = "https://127.0.0.1:8201"
 ui = true

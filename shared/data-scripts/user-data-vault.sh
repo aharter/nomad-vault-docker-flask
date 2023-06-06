@@ -27,6 +27,7 @@ sudo unzip vault.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/vault
 sudo chown root:root /usr/local/bin/vault
 echo "Concluded Vault Installation"
+echo "***Concluded Vault Installation***"
 
 # Setup Vault Service
 echo "Starting Vault Service Setup"

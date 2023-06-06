@@ -57,9 +57,8 @@ echo "Concluded Vault Service Setup"
 # Configure Vault Server
 echo "Starting Vault Server Configuration"
 cat <<EOF | sudo tee /etc/vault/config.hcl
-storage "raft" {
-  path    = "./vault/data"
-  node_id = "node1"
+storage "file" {
+  path = "/etc/vault/data"
 }
 
 listener "tcp" {
@@ -74,7 +73,9 @@ EOF
 
 sudo chown root:root /etc/vault/config.hcl
 sudo chmod 640 /etc/vault/config.hcl
-sudo mkdir -p ./vault/data
+sudo mkdir /etc/vault/data
+sudo chown root:root /etc/vault/data
+sudo chmod 640 /etc/vault/data
 echo "Concluded Vault Server Configuration"
 
 # Start Vault Server
@@ -83,6 +84,7 @@ sudo systemctl enable vault
 sudo systemctl start vault
 
 VAULT_ADDR=http://127.0.0.1:8200
+export VAULT_ADDR
 
 # # Initialize Vault and retrieve the initial root token
 # VAULT_ADDR=http://127.0.0.1:8200

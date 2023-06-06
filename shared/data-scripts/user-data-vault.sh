@@ -28,6 +28,30 @@ sudo chmod 0755 /usr/local/bin/vault
 sudo chown root:root /usr/local/bin/vault
 echo "Concluded Vault Installation"
 
+# Configure Vault Server
+echo "Starting Vault Server Configuration"
+sudo mkdir /etc/vault/
+cat <<EOF | sudo tee /etc/vault/config.hcl
+storage "file" {
+  path = "/etc/vault/data"
+}
+listener "tcp" {
+  address     = "127.0.0.1:8200"
+  tls_disable = "true"
+}
+api_addr = "http://127.0.0.1:8200"
+cluster_addr = "https://127.0.0.1:8201"
+ui = true
+EOF
+
+sudo chown root:root /etc/vault/config.hcl
+sudo chmod 640 /etc/vault/config.hcl
+sudo mkdir /etc/vault/data
+sudo chown root:root /etc/vault/data
+sudo chmod 750 /etc/vault/data
+export VAULT_ADDR="http://127.0.0.1:8200"
+echo "Concluded Vault Server Configuration"
+
 # Setup Vault Service
 echo "Starting Vault Service Setup"
 sudo touch /etc/systemd/system/vault.service
@@ -50,29 +74,6 @@ KillSignal=SIGINT
 WantedBy=multi-user.target
 EOF
 echo "Concluded Vault Service Setup"
-
-# Configure Vault Server
-echo "Starting Vault Server Configuration"
-cat <<EOF | sudo tee /etc/vault/config.hcl
-storage "file" {
-  path = "/etc/vault/data"
-}
-listener "tcp" {
-  address     = "127.0.0.1:8200"
-  tls_disable = "true"
-}
-api_addr = "http://127.0.0.1:8200"
-cluster_addr = "https://127.0.0.1:8201"
-ui = true
-EOF
-
-sudo chown root:root /etc/vault/config.hcl
-sudo chmod 640 /etc/vault/config.hcl
-sudo mkdir /etc/vault/data
-sudo chown root:root /etc/vault/data
-sudo chmod 750 /etc/vault/data
-export VAULT_ADDR="http://127.0.0.1:8200"
-echo "Concluded Vault Server Configuration"
 
 # Start Vault Server
 echo "Starting Vault Server"

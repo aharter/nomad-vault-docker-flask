@@ -117,7 +117,7 @@ for i in {1..9}; do
         continue
     else
       echo "Nomad restarted"
-        exit 0
+        break
     fi
 done
 

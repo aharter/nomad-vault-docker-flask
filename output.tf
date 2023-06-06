@@ -5,5 +5,5 @@ output "nomad_ip" {
 
  output "vault_ip" {
    description = "Vault Address"
-   value = "http://${aws_instance.vault[0].public_ip}"
+   value = "http://${aws_instance.vault[0].public_ip}:8200/ui"
  }

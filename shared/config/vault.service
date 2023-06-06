@@ -1,0 +1,18 @@
+[Unit]
+Description=Vault service
+After=network.target
+ConditionFileNotEmpty=/etc/vault/config.hcl
+
+[Service]
+User=vault
+Group=vault
+ExecStart=/usr/local/bin/vault server --config=/etc/vault/config.hcl
+ExecReload=/bin/kill --signal=HUP $MAINPID
+CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+AmbientCapabilities=CAP_IPC_LOCK
+SecureBits=keep-caps
+NoNewPrivileges=yes
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

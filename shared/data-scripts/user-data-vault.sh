@@ -4,6 +4,9 @@ set -e
 
 exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
+CONFIGDIR="/ops/shared/config"
+VAULTCONFIGDIR="/etc/vault"
+
 # Prepare instance
 sudo apt update
 sudo apt install unzip
@@ -20,60 +23,31 @@ sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
 echo "Concluded Consul-Template Installation"
 
+# Move Vault config files 
+sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
+sudo cp $CONFIGDIR/vault.service /etc/systemd/system/nomad.service
+
 # Install Vault
 echo "Starting Vault Installation"
 curl -L https://releases.hashicorp.com/vault/1.13.2/vault_1.13.2_linux_amd64.zip > vault.zip
 sudo unzip vault.zip -d /usr/local/bin
+
 sudo chmod 0755 /usr/local/bin/vault
 sudo chown root:root /usr/local/bin/vault
+
+sudo mkdir /etc/vault
+sudo chmod 0755 /etc/vault
+sudo chown root:root /etc/vault
 echo "Concluded Vault Installation"
 
-# Configure Vault Server
-echo "Starting Vault Server Configuration"
-sudo mkdir /etc/vault/
-cat <<EOF | sudo tee /etc/vault/config.hcl
-storage "file" {
-  path = "/etc/vault/data"
-}
-listener "tcp" {
-  address     = "127.0.0.1:8200"
-  tls_disable = "true"
-}
-api_addr = "http://127.0.0.1:8200"
-cluster_addr = "https://127.0.0.1:8201"
-ui = true
-EOF
-
+echo "Starting Vault Configuration"
 sudo chown root:root /etc/vault/config.hcl
 sudo chmod 640 /etc/vault/config.hcl
 sudo mkdir /etc/vault/data
 sudo chown root:root /etc/vault/data
 sudo chmod 750 /etc/vault/data
 export VAULT_ADDR="http://127.0.0.1:8200"
-echo "Concluded Vault Server Configuration"
-
-# Setup Vault Service
-echo "Starting Vault Service Setup"
-sudo touch /etc/systemd/system/vault.service
-cat <<EOF | sudo tee /etc/systemd/system/vault.service
-[Unit]
-Description=Vault service
-After=network.target
-ConditionFileNotEmpty=/etc/vault/config.hcl
-[Service]
-User=vault
-Group=vault
-ExecStart=/usr/local/bin/vault server --config=/etc/vault/config.hcl
-ExecReload=/bin/kill --signal=HUP $MAINPID
-CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
-AmbientCapabilities=CAP_IPC_LOCK
-SecureBits=keep-caps
-NoNewPrivileges=yes
-KillSignal=SIGINT
-[Install]
-WantedBy=multi-user.target
-EOF
-echo "Concluded Vault Service Setup"
+echo "Concluded Vault Configuration"
 
 # Start Vault Server
 echo "Starting Vault Server"

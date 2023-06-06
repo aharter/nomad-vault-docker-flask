@@ -28,45 +28,71 @@ sudo chmod 0755 /usr/local/bin/vault
 sudo chown root:root /usr/local/bin/vault
 echo "Concluded Vault Installation"
 
-# Configure Vault as CA
-sudo mkdir -p /etc/vault
-sudo touch /etc/vault/config.hcl
+# Setup Vault Service
+echo "Starting Vault Service Setup"
+sudo touch /etc/systemd/system/vault.service
 
+cat <<EOF | sudo tee /etc/systemd/system/vault.service
+[Unit]
+Description=Vault service
+After=network.target
+ConditionFileNotEmpty=/etc/vault/config.hcl
+
+[Service]
+User=vault
+Group=vault
+ExecStart=/usr/local/bin/vault server --config=/etc/vault/config.hcl
+ExecReload=/bin/kill --signal=HUP $MAINPID
+CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+AmbientCapabilities=CAP_IPC_LOCK
+SecureBits=keep-caps
+NoNewPrivileges=yes
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
+EOF
+echo "Concluded Vault Service Setup"
+
+# Configure Vault Server
+echo "Starting Vault Server Configuration"
 cat <<EOF | sudo tee /etc/vault/config.hcl
-listener "tcp" {
-  address       = "0.0.0.0:8200"
-  tls_cert_file = "/etc/vault/tls.crt"
-  tls_key_file  = "/etc/vault/tls.key"
+storage "raft" {
+  path    = "./vault/data"
+  node_id = "node1"
 }
 
-storage "file" {
-  path = "/etc/vault/data"
+listener "tcp" {
+  address     = "127.0.0.1:8200"
+  tls_disable = "true"
 }
 
 api_addr = "http://127.0.0.1:8200"
 cluster_addr = "https://127.0.0.1:8201"
 ui = true
-
-seal "awskms" {
-  region = "your_aws_region"
-  kms_key_id = "your_kms_key_id"
-}
 EOF
 
-# Start Vault service
-echo "Starting Vault"
+sudo chown root:root /etc/vault/config.hcl
+sudo chmod 640 /etc/vault/config.hcl
+sudo mkdir -p ./vault/data
+echo "Concluded Vault Server Configuration"
+
+# Start Vault Server
+echo "Starting Vault Server"
 sudo systemctl enable vault
 sudo systemctl start vault
 
-# Initialize Vault and retrieve the initial root token
 VAULT_ADDR=http://127.0.0.1:8200
-export VAULT_ADDR
-sudo vault operator init -key-shares=1 -key-threshold=1 > /tmp/vault_init_output
-export VAULT_TOKEN=$(grep "Initial Root Token:" /tmp/vault_init_output | awk '{print $NF}')
-echo "Concluded Vault Initialization"
 
-# Store the root token securely (you can modify this as per your requirements)
-echo "VAULT_ROOT_TOKEN=${VAULT_TOKEN}" | sudo tee /etc/vault/root_token
+# # Initialize Vault and retrieve the initial root token
+# VAULT_ADDR=http://127.0.0.1:8200
+# export VAULT_ADDR
+# sudo vault operator init -key-shares=1 -key-threshold=1 > /tmp/vault_init_output
+# export VAULT_TOKEN=$(grep "Initial Root Token:" /tmp/vault_init_output | awk '{print $NF}')
+# echo "Concluded Vault Initialization"
+
+# # Store the root token securely (you can modify this as per your requirements)
+# echo "VAULT_ROOT_TOKEN=${VAULT_TOKEN}" | sudo tee /etc/vault/root_token
 
 # Clean up temporary files
 rm /tmp/vault_init_output

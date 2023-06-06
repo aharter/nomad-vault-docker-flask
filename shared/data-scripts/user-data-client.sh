@@ -157,5 +157,5 @@ echo "Docker bridge network ip added"
 echo "export NOMAD_ADDR=http://$IP_ADDRESS:4646" | sudo tee --append /home/$HOME_DIR/.bashrc
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --append /home/$HOME_DIR/.bashrc
 
-echo "Server Setup finished"
+echo "Server setup finished"
 # Server setup phase finish -----------------------------------

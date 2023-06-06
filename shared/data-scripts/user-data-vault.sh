@@ -28,6 +28,9 @@ sudo chmod 0755 /usr/local/bin/vault
 sudo chown root:root /usr/local/bin/vault
 echo "Concluded Vault Installation"
 
+
+
+
 # Setup Vault Service
 echo "Starting Vault Service Setup"
 sudo touch /etc/systemd/system/vault.service
@@ -75,7 +78,8 @@ sudo chown root:root /etc/vault/config.hcl
 sudo chmod 640 /etc/vault/config.hcl
 sudo mkdir /etc/vault/data
 sudo chown root:root /etc/vault/data
-sudo chmod 640 /etc/vault/data
+sudo chmod 750 /etc/vault/data
+export VAULT_ADDR="http://127.0.0.1:8200"
 echo "Concluded Vault Server Configuration"
 
 # Start Vault Server
@@ -83,12 +87,7 @@ echo "Starting Vault Server"
 sudo systemctl enable vault
 sudo systemctl start vault
 
-VAULT_ADDR=http://127.0.0.1:8200
-export VAULT_ADDR
-
 # Initialize Vault and retrieve the initial root token
-VAULT_ADDR=http://127.0.0.1:8200
-export VAULT_ADDR
 sudo vault operator init -key-shares=1 -key-threshold=1 > /tmp/vault_init_output
 export VAULT_TOKEN=$(grep "Initial Root Token:" /tmp/vault_init_output | awk '{print $NF}')
 echo "Concluded Vault Initialization"

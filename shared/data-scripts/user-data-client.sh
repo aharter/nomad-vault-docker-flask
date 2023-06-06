@@ -126,10 +126,10 @@ echo "Nomad restarting"
 # Wait for Nomad to restart
 for i in {1..9}; do
     # capture stdout and stderr
-    set +e
     sleep 1
     OUTPUT=$(nomad -v 2>&1)
     if [ $? -ne 0 ]; then
+        echo "Error occurred: $OUTPUT"
         continue
     else
         exit 0

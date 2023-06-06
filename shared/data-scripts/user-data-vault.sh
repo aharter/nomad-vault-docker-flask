@@ -27,7 +27,7 @@ sudo chmod 0755 /usr/local/bin/vault
 sudo chown root:root /usr/local/bin/vault
 echo "Concluded Vault Installation"
 
-Configure Vault as CA
+#Configure Vault as CA
 sudo mkdir -p /etc/vault
 sudo touch /etc/vault/config.hcl
 

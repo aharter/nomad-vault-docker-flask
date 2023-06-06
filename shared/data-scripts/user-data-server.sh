@@ -52,6 +52,9 @@ sudo apt-get update
 sudo apt-get install -y unzip tree redis-tools jq curl tmux
 sudo apt-get clean
 
+echo "IP_ADDRESS:"
+echo $IP_ADDRESS
+
 
 # Disable the firewall
 

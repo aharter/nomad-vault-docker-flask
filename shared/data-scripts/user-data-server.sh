@@ -110,18 +110,19 @@ sudo systemctl start nomad.service
 # Wait for Nomad to restart
 for i in {1..9}; do
     # capture stdout and stderr
-    sleep 1
+    sleep 10
     OUTPUT=$(nomad -v 2>&1)
     if [ $? -ne 0 ]; then
         echo "Error occurred: $OUTPUT"
         continue
     else
+      echo "Nomad restarted"
         exit 0
     fi
 done
 
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
-echo "Nomad restarted"
+
 
 # Add hostname to /etc/hosts
 

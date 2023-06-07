@@ -24,25 +24,23 @@ sudo chown root:root /usr/local/bin/consul-template
 echo "Concluded Consul-Template Installation"
 
 # Move Vault config files 
+echo "Moving Vault Config files"
+sudo mkdir /etc/vault
+sudo chmod 0755 /etc/vault
+sudo chown root:root /etc/vault
+sudo chown root:root /etc/vault/config.hcl
+sudo chmod 640 /etc/vault/config.hcl
 sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
 sudo cp $CONFIGDIR/vault.service /etc/systemd/system/nomad.service
+echo "Moved Vault Config Files"
 
 # Install Vault
 echo "Starting Vault Installation"
 curl -L https://releases.hashicorp.com/vault/1.13.2/vault_1.13.2_linux_amd64.zip > vault.zip
 sudo unzip vault.zip -d /usr/local/bin
-
 sudo chmod 0755 /usr/local/bin/vault
 sudo chown root:root /usr/local/bin/vault
 
-sudo mkdir /etc/vault
-sudo chmod 0755 /etc/vault
-sudo chown root:root /etc/vault
-echo "Concluded Vault Installation"
-
-echo "Starting Vault Configuration"
-sudo chown root:root /etc/vault/config.hcl
-sudo chmod 640 /etc/vault/config.hcl
 sudo mkdir /etc/vault/data
 sudo chown root:root /etc/vault/data
 sudo chmod 750 /etc/vault/data

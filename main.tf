@@ -192,8 +192,6 @@ resource "tls_private_key" "private_key" {
 
 resource "aws_key_pair" "generated_key" {
   key_name   = "tf-key"
-  #public_key = var.aws_ssh_public_key
-  #private_key = var.aws_ssh_private_key
   public_key = tls_private_key.private_key.public_key_openssh
 }
 
@@ -324,6 +322,7 @@ resource "aws_instance" "vault" {
   key_name               = aws_key_pair.generated_key.key_name
   vpc_security_group_ids = [aws_security_group.vault_ingress.id, aws_security_group.ssh_ingress.id, aws_security_group.allow_all_internal.id]
   count                  = var.vault_count
+  user_data_replace_on_change = true
 
   connection {
     type        = "ssh"
@@ -355,11 +354,6 @@ resource "aws_instance" "vault" {
     VAULT_VERSION              = var.VAULT_VERSION
     VAULT_DOWNLOAD             = var.VAULT_DOWNLOAD
     VAULT_TOKEN                = var.VAULT_TOKEN
-    #server_count              = var.server_count
-    #region                    = var.region
-    #cloud_env                 = "aws"
-    #retry_join                = local.retry_join
-    #nomad_version             = var.nomad_version
   })
 
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name

@@ -23,34 +23,45 @@ sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
 echo "Concluded Consul-Template Installation"
 
-# Move Vault config files 
-echo "Moving Vault Config files"
-sudo mkdir /etc/vault
-sudo chmod 0755 /etc/vault
-sudo chown root:root /etc/vault
-sudo chown root:root /etc/vault/config.hcl
-sudo chmod 640 /etc/vault/config.hcl
-sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
-sudo cp $CONFIGDIR/vault.service /etc/systemd/system/nomad.service
-echo "Moved Vault Config Files"
+# Install Vault from Binary
+echo "Starting Vault Install"
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install vault
+# sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
+# sudo cp $CONFIGDIR/vault.service /etc/systemd/system/nomad.service
+# sudo systemctl restart vault
+# export VAULT_ADDR="http://127.0.0.1:8200"
+# echo "Concluded Vault Install"
 
-# Install Vault
-echo "Starting Vault Installation"
-curl -L https://releases.hashicorp.com/vault/1.13.2/vault_1.13.2_linux_amd64.zip > vault.zip
-sudo unzip vault.zip -d /usr/local/bin
-sudo chmod 0755 /usr/local/bin/vault
-sudo chown root:root /usr/local/bin/vault
+# # Move Vault config files 
+# echo "Moving Vault Config files"
+# sudo mkdir /etc/vault
+# sudo chmod 0755 /etc/vault
+# sudo chown root:root /etc/vault
+# sudo chown root:root /etc/vault/config.hcl
+# sudo chmod 640 /etc/vault/config.hcl
+# sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
+# sudo cp $CONFIGDIR/vault.service /etc/systemd/system/nomad.service
+# echo "Moved Vault Config Files"
 
-sudo mkdir /etc/vault/data
-sudo chown root:root /etc/vault/data
-sudo chmod 750 /etc/vault/data
-export VAULT_ADDR="http://127.0.0.1:8200"
-echo "Concluded Vault Configuration"
+# # Install Vault
+# echo "Starting Vault Installation"
+# curl -L https://releases.hashicorp.com/vault/1.13.2/vault_1.13.2_linux_amd64.zip > vault.zip
+# sudo unzip vault.zip -d /usr/local/bin
+# sudo chmod 0755 /usr/local/bin/vault
+# sudo chown root:root /usr/local/bin/vault
 
-# Start Vault Server
-echo "Starting Vault Server"
-sudo systemctl enable vault
-sudo systemctl start vault
+# sudo mkdir /etc/vault/data
+# sudo chown root:root /etc/vault/data
+# sudo chmod 750 /etc/vault/data
+# export VAULT_ADDR="http://127.0.0.1:8200"
+# echo "Concluded Vault Configuration"
+
+# # Start Vault Server
+# echo "Starting Vault Server"
+# sudo systemctl enable vault
+# sudo systemctl start vault
 
 # # Initialize Vault and retrieve the initial root token
 # sudo vault operator init -key-shares=1 -key-threshold=1 > /tmp/vault_init_output

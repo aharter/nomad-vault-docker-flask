@@ -1,5 +1,8 @@
 2do: 
-- Configure user-data-vault.sh => fail ab config.hcl für Vault 
+- Provide final configuration for Vault in config
+- Add populated configuration files for consul-template
+- Add consult-template.service to all instances
+- DONE: Configure user-data-vault.sh => fail ab config.hcl für Vault 
 - DONE: Investigate missing installation of consul-template on all instances
 - Make download URLs dynamic again
 - DONE: Add echoes to .sh scripts

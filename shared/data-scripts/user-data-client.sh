@@ -69,7 +69,9 @@ sudo mkdir -p $NOMADCONFIGDIR
 sudo chmod 755 $NOMADCONFIGDIR
 sudo mkdir -p $NOMADDIR
 sudo chmod 755 $NOMADDIR
-
+sudo mkdir /opt/nomad/templates
+sudo chown root:root /opt/nomad/templates
+sudo chmod 755 /opt/nomad/templates
 echo "Nomad downloaded and installed"
 
 # Docker
@@ -106,6 +108,14 @@ sudo unzip consul-template.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
 echo "Consule-Template installed"
+
+sudo mkdir -p /etc/consul-template.d
+sudo mkdir -p /opt/nomad/cli-certs
+sudo mkdir -p /opt/nomad/agent-certs
+# move consult-template.hcl to this directory
+# move consul-template.service to the right dir
+sudo systemctl enable consul-template
+sudo systemctl start consul-template
 
 # Install phase finish ---------------------------------------
 echo "Install Phase completed"

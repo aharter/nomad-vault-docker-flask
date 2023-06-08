@@ -63,8 +63,12 @@ sudo chown root:root /usr/local/bin/nomad
 
 sudo mkdir -p $NOMADCONFIGDIR
 sudo chmod 755 $NOMADCONFIGDIR
-sudo mkdir -p $NOMADDIR
-sudo chmod 755 $NOMADDIR
+
+sudo mkdir -p $NOMADDIR/templates
+sudo mkdir $NOMADDIR/cli-certs
+sudo mkdir $NOMADDIR/agent-certs
+sudo chmod -R 755 $NOMADDIR
+sudo chown -R root:root $NOMADDIR
 
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
@@ -88,6 +92,13 @@ sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
 echo "Consule-Template installed"
 
+sudo mkdir -p /etc/consul-template.d
+sudo cp $CONFIGDIR/consul-template.hcl /etc/consult-template.d/consul-template.hcl
+sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
+sudo systemctl enable consul-template.service
+sudo systemctl start consul-template.service
+
+
 # Install phase finish ---------------------------------------
 
 echo "Install complete"
@@ -101,7 +112,6 @@ sed -i "s/RETRY_JOIN/$RETRY_JOIN/g" $CONFIGDIR/nomad.hcl
 sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/nomad.hcl
 sudo cp $CONFIGDIR/nomad.hcl $NOMADCONFIGDIR
 sudo cp $CONFIGDIR/nomad.service /etc/systemd/system/nomad.service
-
 echo "Nomad configured"
 
 sudo systemctl enable nomad.service
@@ -122,7 +132,6 @@ for i in {1..9}; do
 done
 
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
-
 
 # Add hostname to /etc/hosts
 

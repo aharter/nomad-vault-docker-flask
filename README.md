@@ -1,3 +1,10 @@
+Setup
+- Extract private key from state
+- Check certificates in Vault
+- Enable TLS in Nomad Servers & Clients
+- Obtain nomad secret ID (nomad acl bootstrap)
+
+
 2do: 
 - Enable Gossip Encryption for Nomad
 - Make download URLs dynamic again

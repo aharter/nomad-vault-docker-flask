@@ -3,7 +3,7 @@
 vault {
   # This is the address of the Vault leader. The protocol (http(s)) portion
   # of the address is required.
-  address      = "http://${aws_instance.vault[0].public_ip}:8200"
+  address      = "http://${aws_instance.vault[0].private_ip}:8200"
 
   # This value can also be specified via the environment variable VAULT_TOKEN.
   token        = "s.m069Vpul3c4lfGnJ6unpxgxD"

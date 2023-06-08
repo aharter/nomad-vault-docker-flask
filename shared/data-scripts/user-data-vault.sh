@@ -15,21 +15,13 @@ sudo apt install unzip
 echo "Starting jq install"
 sudo snap install jq
 
-# Install consul-template
-echo "Starting Consul-Template Installation"
-curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.32.0_linux_amd64.zip > consul-template.zip
-sudo unzip consul-template.zip -d /usr/local/bin
-sudo chmod 0755 /usr/local/bin/consul-template
-sudo chown root:root /usr/local/bin/consul-template
-echo "Concluded Consul-Template Installation"
-
 # Install Vault from Binary
 echo "Starting Vault Install"
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update && sudo apt install vault
-# sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
-# sudo cp $CONFIGDIR/vault.service /etc/systemd/system/nomad.service
+sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
+sudo cp $CONFIGDIR/vault.service /etc/systemd/system/nomad.service
 # sudo systemctl restart vault
 # export VAULT_ADDR="http://127.0.0.1:8200"
 # echo "Concluded Vault Install"

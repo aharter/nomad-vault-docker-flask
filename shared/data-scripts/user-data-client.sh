@@ -136,12 +136,12 @@ sudo waypoint context create \
   -set-default \
   hcp-nasenblick-org-nasenblick
 
-sudo waypoint runner install \
-  -platform=nomad \
-  -server-addr=api.hashicorp.cloud:443 \
-  -nomad-runner-image=hashicorp/waypoint \
-  -nomad-host-volume=wp-runner-vol
-echo "Concluded Waypoint Runner Installation"
+# sudo waypoint runner install \
+#   -platform=nomad \
+#   -server-addr=api.hashicorp.cloud:443 \
+#   -nomad-runner-image=hashicorp/waypoint \
+#   -nomad-host-volume=wp-runner-vol
+# echo "Concluded Waypoint Runner Installation"
 
 echo "Starting Waypoint Runner"
 sudo systemctl enable waypoint

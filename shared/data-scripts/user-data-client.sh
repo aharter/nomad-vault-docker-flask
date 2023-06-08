@@ -117,11 +117,18 @@ sudo systemctl start consul-template.service
 
 # Copy template files for consult-template
 sudo cp $CONFIGDIR/templates/NomadClients/* /opt/nomad/templates
-sudo chmod -R 644 /opt/nomad/templates 
+sudo chmod -R 644 /opt/nomad/templates
 
+# Install Waypoint runner
+echo "Starting Waypoint Runner Installation"
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install waypoint
+echo "Concluding Waypoint Runner Installation"
+
+echo "Install Phase completed"
 
 # Install phase finish ---------------------------------------
-echo "Install Phase completed"
 
 RETRY_JOIN="${retry_join}"
 DOCKER_BRIDGE_IP_ADDRESS=(`ifconfig docker0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`)
@@ -151,6 +158,7 @@ for i in {1..9}; do
 done
 
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
+
 
 # Add hostname to /etc/hosts
 

@@ -103,19 +103,22 @@ echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-iptables
 
 # Install consul-template
 echo "Starting Consul-Template Installation"
-curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.32.0_linux_amd64.zip > consul-template.zip
+sudo curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.32.0_linux_amd64.zip > consul-template.zip
 sudo unzip consul-template.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
 echo "Consule-Template installed"
 
 sudo mkdir -p /etc/consul-template.d
-sudo mkdir -p /opt/nomad/cli-certs
-sudo mkdir -p /opt/nomad/agent-certs
-# move consult-template.hcl to this directory
-# move consul-template.service to the right dir
-sudo systemctl enable consul-template
-sudo systemctl start consul-template
+sudo cp $CONFIGDIR/consul-template.hcl /etc/consult-template.d/consul-template.hcl
+sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
+sudo systemctl enable consul-template.service
+sudo systemctl start consul-template.service
+
+# Copy template files for consult-template
+sudo cp $CONFIGDIR/templates/nomadclientss/* /opt/nomad/templates
+sudo chmod -R 644 /opt/nomad/templates 
+
 
 # Install phase finish ---------------------------------------
 echo "Install Phase completed"

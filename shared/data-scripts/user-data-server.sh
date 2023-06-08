@@ -104,7 +104,7 @@ sudo systemctl enable consul-template.service
 sudo systemctl start consul-template.service
 
 # Copy template files for consult-template
-sudo cp $CONFIGDIR/templates/nomadservers/* /opt/nomad/templates
+sudo cp $CONFIGDIR/templates/NomadServers/* /opt/nomad/templates
 sudo chmod -R 644 /opt/nomad/templates 
 
 

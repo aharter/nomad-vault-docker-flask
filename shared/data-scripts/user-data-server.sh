@@ -70,6 +70,11 @@ sudo mkdir $NOMADDIR/agent-certs
 sudo chmod -R 755 $NOMADDIR
 sudo chown -R root:root $NOMADDIR
 
+sudo mkdir -p /nomad/host-volumes/wp-server
+sudo mkdir -p /nomad/host-volumes/wp-runner
+sudo chmod -R 755 /nomad/host-volumes/wp-runner
+sudo chown -R root:root /nomad/host-volumes/wp-runner
+
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
 sudo apt-get install -y apt-transport-https ca-certificates gnupg2 

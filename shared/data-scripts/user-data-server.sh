@@ -98,7 +98,7 @@ sudo chown root:root /usr/local/bin/consul-template
 echo "Consule-Template installed"
 
 sudo mkdir -p /etc/consul-template.d
-sudo cp $CONFIGDIR/consul-template.hcl /etc/consult-template.d/consul-template.hcl
+sudo cp $CONFIGDIR/consul-template.hcl /etc/consul-template.d/consul-template.hcl
 sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
 sudo systemctl enable consul-template.service
 sudo systemctl start consul-template.service

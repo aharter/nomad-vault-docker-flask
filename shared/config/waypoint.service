@@ -1,0 +1,15 @@
+[Unit]
+Description=Waypoint Server
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/waypoint server run -accept-tos
+User=waypoint
+Group=waypoint
+Restart=always
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target

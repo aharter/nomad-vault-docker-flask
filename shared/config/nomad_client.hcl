@@ -25,16 +25,26 @@ client {
   server_join {
     retry_join = ["RETRY_JOIN"]
   }
+
+  host_volume "wp-server-vol" {
+    path = "/nomad/host-volumes/wp-server"
+    read_only = false
+  }
+
+  host_volume "wp-runner-vol" {
+    path = "/nomad/host-volumes/wp-runner"
+    read_only = false
+  }
 }
 
-tls {
-  http = true
-  rpc  = true
+// tls {
+//   http = true
+//   rpc  = true
 
-  ca_file   = "/opt/nomad/agent-certs/ca.crt"
-  cert_file = "/opt/nomad/agent-certs/agent.crt"
-  key_file  = "/opt/nomad/agent-certs/agent.key"
+//   ca_file   = "/opt/nomad/agent-certs/ca.crt"
+//   cert_file = "/opt/nomad/agent-certs/agent.crt"
+//   key_file  = "/opt/nomad/agent-certs/agent.key"
 
-  verify_server_hostname = true
-  verify_https_client    = true
-}
+//   verify_server_hostname = true
+//   verify_https_client    = true
+// }

@@ -26,6 +26,9 @@ sudo cp $CONFIGDIR/vault.service /etc/systemd/system/nomad.service
 # export VAULT_ADDR="http://127.0.0.1:8200"
 # echo "Concluded Vault Install"
 
+/usr/lib/systemd/system/vault.service
+
+
 # # Move Vault config files 
 # echo "Moving Vault Config files"
 # sudo mkdir /etc/vault

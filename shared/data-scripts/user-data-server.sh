@@ -159,10 +159,17 @@ echo "Docker bridge network ip added"
 echo "export NOMAD_ADDR=http://$IP_ADDRESS:4646" | sudo tee --append /home/$HOME_DIR/.bashrc
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --append /home/$HOME_DIR/.bashrc
 
-# Run the bootstrap, export the management token, set the token variable, and test connectivity:
-nomad acl bootstrap | grep -i secret | awk -F "=" '{print $2}' | xargs > nomad-management.token
-export NOMAD_TOKEN=$(cat nomad-management.token)
+
+# Run the bootstrap command and capture the Secret ID
+SECRET_ID=$(nomad acl bootstrap | grep -i secret | awk -F "=" '{print $2}' | xargs)
+echo "$SECRET_ID" > "$NOMAD_CONFIG_DIR/nomad-management.token"
+export NOMAD_TOKEN=$SECRET_ID
 nomad server members >> /var/log/user-data.log
+
+# # Run the bootstrap, export the management token, set the token variable, and test connectivity:
+# nomad acl bootstrap | grep -i secret | awk -F "=" '{print $2}' | xargs > nomad-management.token
+# export NOMAD_TOKEN=$(cat nomad-management.token)
+# nomad server members >> /var/log/user-data.log
 
 # Server setup phase finish -----------------------------------
 echo "Server setup finished"

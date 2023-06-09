@@ -121,27 +121,30 @@ sudo chmod -R 644 /opt/nomad/templates
 
 # Install Waypoint runner
 echo "Starting Waypoint Runner Installation"
-wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install waypoint
+#wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+#echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+#sudo apt update && sudo apt install waypoint
+
+sudo curl -L https://releases.hashicorp.com/waypoint/0.11.0/waypoint_0.11.0_linux_amd64.zip > waypoint.zip
+sudo unzip waypoint.zip -d /usr/local/bin
 sudo cp $CONFIGDIR/waypoint.service /etc/systemd/system/waypoint.service
 sudo mkdir -p /nomad/host-volumes/wp-server
 sudo mkdir -p /nomad/host-volumes/wp-runner
 echo "Creating Waypoint context"
 sudo waypoint context create \
   -server-addr=api.hashicorp.cloud:443 \
-  -server-auth-token=4VMwSUHgQAThsactx196CpPeGojiePvm8PKTJ6DSP741sfxDRtVLpyCFyb1iy8GdVJxYtvgLszu62dQfE5hwyccS1LJNxXfmVbuVtRirGtg3iSMctNxhfYMsMpDVQ9rZJAbpsysHJjDtSLXxwBA7AE9QJYX2ZJTcQdBRpatV6t5UcuZuvvvCXeTqqGyEmxJaaxW8a1fhwhFtN5h7rPUUw9D5dtjB33ENKLRvNcQzKb5VNECvdMQSx8CwhywrK1vdCqKK1Ue7gtnM8pBWmhnnpjcn5d9tGJA3gCxF6SxkEcwaWX217vU1hu3jptMH85xz5st2rJGYKWjsQdxB8axMEvGyZy5Gdg92q4bJxrbyic3dNStcDt4ryqn3mZ9EX1kUfR7tSTBjhZvFQU3hmsyFVB8CueFYLa7fspmQQmKu5KQu9xsfCW2zsLGgcKmLPZX7fc7vHo5JUf \
+  -server-auth-token=4VMwSUHgQATgAMZSsE19HCY34uqK2V5NqCEcbEs6xh9y5ohCmpfJgRBZtwwfbq2qew4Ur3oG6ashikG4GFE3WE46C7YzjSXp8u6iFr16ncmmeWZ2ixEktokX2yDjHHwTGXWWd8jtd6qsxebVTnekNe6aB91uq146gNw14dRjP4featPCJaKPh7d5PxZDZTef33hwsBVpr4XYVT3iVun6oeggeqn4FbeqzbPnwt81i5omrUHGd6CVcFSJCx6KCZv9WPuGDCSR9j1MgHZQLdQ36fZpyATgXygEpVkTDj25mWGetDUi3HjXHc8nnCegPugKNRgwh6zBu5hPKekFuBpEZ6n9txY7FdWJVeJ4srNqZv9QceWttpDxabb5VykhkSCAxzgw6N6MA51qPzcfXhkJnKyTpgjeCLCaRZuLr6C26YVCWrhV1e96LiJnyTTtycz2Gt3s6rwxxP \
   -server-require-auth=true \
   -server-platform="hcp" \
   -set-default \
   hcp-nasenblick-org-nasenblick
 
-# sudo waypoint runner install \
-#   -platform=nomad \
-#   -server-addr=api.hashicorp.cloud:443 \
-#   -nomad-runner-image=hashicorp/waypoint \
-#   -nomad-host-volume=wp-runner-vol
-# echo "Concluded Waypoint Runner Installation"
+ sudo waypoint runner install \
+  -platform=nomad \
+  -server-addr=api.hashicorp.cloud:443 \
+  -nomad-runner-image=hashicorp/waypoint \
+  -nomad-host-volume=wp-runner-vol
+ echo "Concluded Waypoint Runner Installation"
 
 echo "Starting Waypoint Runner"
 sudo systemctl enable waypoint

@@ -15,17 +15,17 @@ variable "allowlist_ip" {
 
 variable "server_instance_type" {
   description = "The AWS instance type to use for nomad servers."
-  default     = "t2.nano"
+  default     = "t2.micro"
 }
 
 variable "client_instance_type" {
   description = "The AWS instance type to use for nomad clients."
-  default     = "t2.nano"
+  default     = "t2.micro"
 }
 
 variable "vault_instance_type" {
   description = "The AWS instance type to use for vault instances."
-  default     = "t2.nano"
+  default     = "t2.micro"
 }
 
 variable "server_count" {
@@ -35,7 +35,7 @@ variable "server_count" {
 
 variable "client_count" {
   description = "The number of clients to provision."
-  default     = "1"
+  default     = "2"
 }
 
 variable "vault_count" {

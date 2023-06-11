@@ -1,13 +1,19 @@
 Setup
-- Extract private key from state
-- Check certificates in Vault
+- Vault: Check automated generation of certificates
 - Enable TLS in Nomad Servers & Clients
-- Obtain nomad secret ID (nomad acl bootstrap)
+    - https://developer.hashicorp.com/nomad/tutorials/integrate-vault/vault-pki-nomad
 
 
 2do: 
-- Enable Gossip Encryption for Nomad
+- Main: Save private key to AWS
+- Vault: Check certificate handling after new apply
+- Git Hub: Clean up GitHub 
+- Vault: Enable Gossip Encryption for Nomad
+    - https://developer.hashicorp.com/nomad/tutorials/transport-security/security-gossip-encryption
+- Nomad: Deploy Nomad job with example app
+- Nomad: Deploy Nomad job with React app
 - Make download URLs dynamic again
+- DONE: Obtain nomad secret ID (nomad acl bootstrap)
 - DONE: Create AMI of all instance types
 - DONE: Provide final configuration for Vault in config
 - DONE: Make Vault address dynamic

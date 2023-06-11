@@ -3,7 +3,7 @@ terraform {
     organization = "nasenblick"
 
     workspaces {
-      name = "nomad-vault-react"
+      name = "nomad-vault-docker-flask"
     }
   }
 

@@ -63,12 +63,14 @@ sudo chown root:root /usr/local/bin/nomad
 
 sudo mkdir -p $NOMADCONFIGDIR
 sudo chmod 755 $NOMADCONFIGDIR
-
-sudo mkdir -p $NOMADDIR/templates
+sudo mkdir -p $NOMADDIR
+sudo mkdir $NOMADDIR/templates
 sudo mkdir $NOMADDIR/cli-certs
 sudo mkdir $NOMADDIR/agent-certs
 sudo chmod -R 755 $NOMADDIR
 sudo chown -R root:root $NOMADDIR
+echo "Nomad downloaded and installed"
+
 
 sudo mkdir -p /nomad/host-volumes/wp-server
 sudo mkdir -p /nomad/host-volumes/wp-runner
@@ -107,7 +109,6 @@ sudo systemctl start consul-template.service
 sudo cp $CONFIGDIR/templates/NomadServers/* /opt/nomad/templates
 sudo chmod -R 644 /opt/nomad/templates 
 
-
 # Install phase finish ---------------------------------------
 
 echo "Install complete"
@@ -143,22 +144,18 @@ done
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
 
 # Add hostname to /etc/hosts
-
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
 echo "Hostname Added"
 
 # Add Docker bridge network IP to /etc/resolv.conf (at the top)
-
 echo "nameserver $DOCKER_BRIDGE_IP_ADDRESS" | sudo tee /etc/resolv.conf.new
 cat /etc/resolv.conf | sudo tee --append /etc/resolv.conf.new
 sudo mv /etc/resolv.conf.new /etc/resolv.conf
-
 echo "Docker bridge network ip added"
 
 # Set env vars
 echo "export NOMAD_ADDR=http://$IP_ADDRESS:4646" | sudo tee --append /home/$HOME_DIR/.bashrc
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --append /home/$HOME_DIR/.bashrc
-
 
 
 # Run the bootstrap, export the management token, set the token variable, and test connectivity:

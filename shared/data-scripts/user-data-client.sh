@@ -68,10 +68,11 @@ sudo chown root:root /usr/local/bin/nomad
 sudo mkdir -p $NOMADCONFIGDIR
 sudo chmod 755 $NOMADCONFIGDIR
 sudo mkdir -p $NOMADDIR
-sudo chmod 755 $NOMADDIR
-sudo mkdir /opt/nomad/templates
-sudo chown root:root /opt/nomad/templates
-sudo chmod 755 /opt/nomad/templates
+sudo mkdir $NOMADDIR/templates
+sudo mkdir $NOMADDIR/cli-certs
+sudo mkdir $NOMADDIR/agent-certs
+sudo chmod -R 755 $NOMADDIR
+sudo chown -R root:root $NOMADDIR
 echo "Nomad downloaded and installed"
 
 # Docker
@@ -119,21 +120,19 @@ sudo systemctl start consul-template.service
 sudo cp $CONFIGDIR/templates/NomadClients/* /opt/nomad/templates
 sudo chmod -R 644 /opt/nomad/templates
 
-# Install Waypoint runner
-echo "Starting Waypoint Runner Installation"
-#wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-#echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-#sudo apt update && sudo apt install waypoint
-
-sudo curl -L https://releases.hashicorp.com/waypoint/0.11.0/waypoint_0.11.0_linux_amd64.zip > waypoint.zip
-sudo unzip waypoint.zip -d /usr/local/bin
-sudo cp $CONFIGDIR/waypoint.service /etc/systemd/system/waypoint.service
-sudo mkdir -p /nomad/host-volumes/wp-server
-sudo mkdir -p /nomad/host-volumes/wp-runner
-
-sudo systemctl enable waypoint
-sudo systemctl start waypoint
-echo "Waypoint Runner started"
+## Install Waypoint runner
+# echo "Starting Waypoint Runner Installation"
+# wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+# echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+# sudo apt update && sudo apt install waypoint
+# sudo curl -L https://releases.hashicorp.com/waypoint/0.11.0/waypoint_0.11.0_linux_amd64.zip > waypoint.zip
+# sudo unzip waypoint.zip -d /usr/local/bin
+# sudo cp $CONFIGDIR/waypoint.service /etc/systemd/system/waypoint.service
+# sudo mkdir -p /nomad/host-volumes/wp-server
+# sudo mkdir -p /nomad/host-volumes/wp-runner
+# sudo systemctl enable waypoint
+# sudo systemctl start waypoint
+# echo "Waypoint Runner started"
 
 echo "Install Phase completed"
 

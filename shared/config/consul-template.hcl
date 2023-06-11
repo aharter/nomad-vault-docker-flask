@@ -3,10 +3,10 @@
 vault {
   # This is the address of the Vault leader. The protocol (http(s)) portion
   # of the address is required.
-  address      = "http://${aws_instance.vault[0].private_ip}:8200"
+  address      = "http://IP_ADDRESS:8200"
 
   # This value can also be specified via the environment variable VAULT_TOKEN.
-  token        = "s.m069Vpul3c4lfGnJ6unpxgxD"
+  token        = "TOKEN"
 
   # This should also be less than or around 1/3 of your TTL for a predictable
   # behavior. Consult https://github.com/hashicorp/vault/issues/3414

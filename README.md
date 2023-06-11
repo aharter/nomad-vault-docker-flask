@@ -6,7 +6,8 @@ Setup
 
 2do: 
 - Nomad: Deploy jobs from CLI
-    - export NOMAD_ADDR=nomadClientIP
+    - export NOMAD_ADDR=http://nomadClientIP
+    - ssh -i ../../../tf-key.pem -L 4646:localhost:4646 ubuntu@54.211.81.76
     - nomad job run pytechco-redis.nomad.hcl
     - nomad job run pytechco-web.nomad.hcl
     - nomad node status -verbose \

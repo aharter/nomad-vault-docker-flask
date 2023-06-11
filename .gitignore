@@ -1,5 +1,6 @@
 .terraform/providers/
 example-app/
+jobs/
 outputs.tf
 tf-key.pem
 .DS_Store

@@ -1,13 +1,9 @@
-Setup
-- Vault: Check automated generation of certificates
-- Enable TLS in Nomad Servers & Clients
-    - https://developer.hashicorp.com/nomad/tutorials/integrate-vault/vault-pki-nomad
+SETUP INSTRUCTIONS
 
-
-2do: 
-- Nomad: Deploy jobs from CLI
-    - export NOMAD_ADDR=http://nomadClientIP
-    - ssh -i ../../../tf-key.pem -L 4646:localhost:4646 ubuntu@54.211.81.76
+Nomad: Deploy jobs from CLI
+    - export NOMAD_ADDR=http://localhost:4646
+    - ssh -i tf-key.pem -L 4646:localhost:4646 ubuntu@IP_ADDRESS
+    - nomad status -address=http://localhost:4646
     - nomad job run pytechco-redis.nomad.hcl
     - nomad job run pytechco-web.nomad.hcl
     - nomad node status -verbose \
@@ -18,24 +14,20 @@ Setup
     - nomad job dispatch -meta budget="200" pytechco-setup
     - nomad job run pytechco-employee.nomad.hcl
 
-- Main: Save private key to AWS
-- Vault: Check certificate handling after new apply
+
+Vault: Secure cluster 
+- Update vault.hcl with IP(s)
+- Connect with browser to IP_ADDRESS:8200 for initial root token & key
+- Enable TLS in Nomad Servers & Clients
+    - https://developer.hashicorp.com/nomad/tutorials/integrate-vault/vault-pki-nomad
+
+
+2do: 
+- Vault: Check why host IP doesn't get generated dynamically
+- TF: Save private key to AWS
 - Git Hub: Clean up GitHub 
 - Vault: Enable Gossip Encryption for Nomad
     - https://developer.hashicorp.com/nomad/tutorials/transport-security/security-gossip-encryption
-- Nomad: Deploy Nomad job with example app
-- Nomad: Deploy Nomad job with React app
-- Make download URLs dynamic again
-- DONE: Obtain nomad secret ID (nomad acl bootstrap)
-- DONE: Create AMI of all instance types
-- DONE: Provide final configuration for Vault in config
-- DONE: Make Vault address dynamic
-- DONE: Add populated configuration files for consul-template
-- DONE: Add consult-template.service to all instances
-- DONE: Configure user-data-vault.sh => fail ab config.hcl für Vault 
-- DONE: Investigate missing installation of consul-template on all instances
-- DONE: Add echoes to .sh scripts
-- DONE: Vault: sudo snap install jq
-- DONE: Figure out key handling (either access to private key or use existing)
-- DONE: Set instance name for vault as tag "Name" = "${var.name}-server-${count.index}
+- TF: Make download URLs dynamic again
+
 

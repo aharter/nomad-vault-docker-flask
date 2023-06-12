@@ -16,7 +16,7 @@ storage "file" {
 
 # HTTP listener
 listener "tcp" {
-  address = "http://${aws_instance.vault[0].private_ip}:8200"
+  address = "IP_ADDRESS:8200"
   tls_disable = 1
 }
 

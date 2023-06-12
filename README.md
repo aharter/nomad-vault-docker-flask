@@ -1,6 +1,6 @@
 SETUP INSTRUCTIONS
 
-Nomad: Deploy jobs from CLI
+Nomad: Deploy jobs from local CLI
 - export NOMAD_ADDR=http://localhost:4646
 - ssh -i tf-key.pem -L 4646:localhost:4646 ubuntu@IP_ADDRESS
 - nomad status -address=http://localhost:4646
@@ -15,7 +15,7 @@ Nomad: Deploy jobs from CLI
 - nomad job run pytechco-employee.nomad.hcl
 
 
-Vault: Secure cluster 
+Vault: Secure Nomad Cluster with self-signed Certs 
 Source: https://developer.hashicorp.com/nomad/tutorials/integrate-vault/vault-pki-nomad
 - sudo nano /etc/vault.d/vault.hcl (Listeners)
 - Generate CA cert for internal IP
@@ -40,18 +40,12 @@ vault write -field=certificate pki/root/generate/internal \
 - sudo nano tls-policy.hcl
 - MAKE NOTE OF TOKEN: vault token create -policy="tls-policy" -period=24h -orphan
 
-
 On all Nomad nodes
 - sudo nano /etc/consul-template.d/consul-template.hcl (IP & Token)
 - sudo systemctl start consul-template.service
 - sudo nano /etc/nomad.d/nomad.hcl (uncomment TLS & Server: rpc_upgrade_mode = true)
 - Nomad Server: sudo nano /etc/nomad.d/nomad.hcl (rpc_upgrade_mode = true)
 - sudo systemctl reload nomad
-
-
-- Enable TLS in Nomad Servers & Clients
-    - https://developer.hashicorp.com/nomad/tutorials/integrate-vault/vault-pki-nomad
-
 
 2do: 
 - Vault: Check why host IP doesn't get generated dynamically

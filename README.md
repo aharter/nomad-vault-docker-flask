@@ -17,9 +17,7 @@ HOW TO: Deploy Nomad jobs from your local CLI
 - nomad job run pytechco-employee.nomad.hcl
 
 HOW TO: Secure Nomad Cluster with Vault as CA
-Source: https://developer.hashicorp.com/nomad/tutorials/integrate-vault/vault-pki-nomad
 - sudo nano /etc/vault.d/vault.hcl (Listeners)
-- Generate CA cert for internal IP
 - export VAULT_SKIP_VERIFY=true
 - vault operator unseal
 - vault login

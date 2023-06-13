@@ -5,7 +5,7 @@ set -e
 exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 CONFIGDIR="/ops/shared/config"
-VAULTCONFIGDIR="/etc/vault"
+VAULTCONFIGDIR="/etc/vault.d"
 IP_ADDRESS=$(curl http://instance-data/latest/meta-data/local-ipv4)
 
 # Prepare instance
@@ -25,8 +25,8 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install vault
 
 sed -i "s|IP_ADDRESS|$IP_ADDRESS|g" $CONFIGDIR/vault.hcl
-sudo mkdir $VAULTCONFIGDIR
-sudo chmod 0755 $VAULTCONFIGDIR
+# sudo mkdir $VAULTCONFIGDIR
+# sudo chmod 0755 $VAULTCONFIGDIR
 sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
 sudo mkdir -p /usr/lib/systemd/system
 sudo cp $CONFIGDIR/vault.service /usr/lib/systemd/system/vault.service

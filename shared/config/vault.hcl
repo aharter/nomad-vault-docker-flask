@@ -27,6 +27,13 @@ listener "tcp" {
   tls_key_file  = "/opt/vault/tls/tls.key"
 }
 
+# HTTPS listener
+listener "tcp" {
+  address       = "IP_ADDRESS_PUBLIC:8200"
+  tls_cert_file = "/opt/vault/tls/tls.crt"
+  tls_key_file  = "/opt/vault/tls/tls.key"
+}
+
 # Enterprise license_path
 # This will be required for enterprise as of v1.8
 # license_path = "/etc/vault.d/vault.hclic"

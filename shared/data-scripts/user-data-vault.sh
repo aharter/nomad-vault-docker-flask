@@ -26,7 +26,7 @@ export VAULT_ADDR="http://127.0.0.1:8200"
 echo "Concluded Vault Preparation"
 
 
-# # Install Vault from Binary
+# Install Vault from Binary
 # echo "Starting Vault Install"
 # wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 # echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
@@ -35,11 +35,11 @@ echo "Concluded Vault Preparation"
 # sudo systemctl restart vault
 # echo "Concluded Vault Installation"
 
-# # Initialize Vault and retrieve the initial root token
+# Initialize Vault and retrieve the initial root token
 # sudo vault operator init -key-shares=1 -key-threshold=1 > /tmp/vault_init_output
 # export VAULT_TOKEN=$(grep "Initial Root Token:" /tmp/vault_init_output | awk '{print $NF}')
 
-# # Store the root token securely (you can modify this as per your requirements)
+# Store the root token securely (you can modify this as per your requirements)
 # echo "VAULT_ROOT_TOKEN=${VAULT_TOKEN}" | sudo tee /etc/vault/root_token
 
 # # Clean up temporary files

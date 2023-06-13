@@ -1,6 +1,8 @@
-SETUP INSTRUCTIONS
+This is for setting up and running a secure (mTLS) Nomad Cluster with Vault as CA using self-signed certificates. While all of the clusters internal communication is secured, it is accessible externally over https only. Waypoint is used for deploying a sample Docker-Flask Web Application. 
 
-Nomad: Deploy jobs from local CLI
+Please note: This is not a production-ready setup. 
+
+HOW TO: Deploy Nomad jobs from your local CLI
 - export NOMAD_ADDR=http://localhost:4646
 - ssh -i tf-key.pem -L 4646:localhost:4646 ubuntu@IP_ADDRESS
 - nomad status -address=http://localhost:4646
@@ -14,8 +16,7 @@ Nomad: Deploy jobs from local CLI
 - nomad job dispatch -meta budget="200" pytechco-setup
 - nomad job run pytechco-employee.nomad.hcl
 
-
-Vault: Secure Nomad Cluster with self-signed Certs 
+HOW TO: Secure Nomad Cluster with Vault as CA
 Source: https://developer.hashicorp.com/nomad/tutorials/integrate-vault/vault-pki-nomad
 - sudo nano /etc/vault.d/vault.hcl (Listeners)
 - Generate CA cert for internal IP
@@ -47,12 +48,11 @@ On all Nomad nodes
 - Nomad Server: sudo nano /etc/nomad.d/nomad.hcl (rpc_upgrade_mode = true)
 - sudo systemctl reload nomad
 
-2do: 
-- Vault: Check why host IP doesn't get generated dynamically
-- TF: Save private key to AWS
+2do:
+- TF: Save private key to AWS/ Vault Secrets
 - Git Hub: Clean up GitHub 
 - Vault: Enable Gossip Encryption for Nomad
     - https://developer.hashicorp.com/nomad/tutorials/transport-security/security-gossip-encryption
-- TF: Make download URLs dynamic again
+- TF: Make all download URLs dynamic
 
 

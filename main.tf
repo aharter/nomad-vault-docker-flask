@@ -244,6 +244,7 @@ resource "aws_instance" "server" {
     retry_join                = local.retry_join
     NOMADVERSION             = var.nomad_version
     nomad_version             = var.nomad_version
+    vault_private_ip = aws_instance.vault[0].private_ip
   })
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 
@@ -301,6 +302,7 @@ resource "aws_instance" "client" {
     retry_join                = local.retry_join
     nomad_version             = var.nomad_version
     NOMADVERSION             = var.nomad_version
+    vault_private_ip = aws_instance.vault[0].private_ip
   })
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 

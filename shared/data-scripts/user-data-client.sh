@@ -14,7 +14,7 @@ NOMADCONFIGDIR="/etc/nomad.d"
 NOMADDIR="/opt/nomad"
 HOME_DIR="ubuntu"
 CLOUD_ENV=${cloud_env}
-VAULT_IP="${aws_instance.vault[0].private_ip}"
+VAULT_IP="${vault_private_ip}"
 
 # Install phase begin ---------------------------------------
 

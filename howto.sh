@@ -20,19 +20,25 @@ HOW TO: Secure Nomad Cluster with Vault as CA
 - vault secrets enable pki
 - vault secrets tune -max-lease-ttl=87600h pki
 vault write -field=certificate pki/root/generate/internal \
-    common_name="global.nomad" ttl=87600h > CA_cert.crt
+    common_name="global.nomad" ip_sans=XXXXXX ttl=87600h > CA_cert.crt
 - vault secrets enable -path=pki_int pki
 - vault secrets tune -max-lease-ttl=43800h pki_int
 - vault write -format=json pki_int/intermediate/generate/internal \
     common_name="global.nomad Intermediate Authority" \
-    ttl="43800h" | jq -r '.data.csr' > pki_intermediate.csr
+    ttl="43800h" ip_sans=172.31.92.81 | jq -r '.data.csr' > pki_intermediate.csr
 - vault write -format=json pki/root/sign-intermediate \
     csr=@pki_intermediate.csr format=pem_bundle \
-    ttl="43800h" | jq -r '.data.certificate' > intermediate.cert.pem
+    ttl="43800h" ip_sans=172.31.92.81 | jq -r '.data.certificate' > intermediate.cert.pem
 - vault write pki_int/intermediate/set-signed certificate=@intermediate.cert.pem
 - vault write pki_int/roles/nomad-cluster allowed_domains=global.nomad \
     allow_subdomains=true max_ttl=86400s require_cn=false generate_lease=true
-- sudo nano tls-policy.hcl
+- sudo nano tls-policy.hcl:
+
+path "pki_int/issue/nomad-cluster" {
+  capabilities = ["update"]
+}
+
+- vault policy write tls-policy tls-policy.hcl
 - MAKE NOTE OF TOKEN: vault token create -policy="tls-policy" -period=24h -orphan
 
 On all Nomad nodes

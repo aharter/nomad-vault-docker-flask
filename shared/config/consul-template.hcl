@@ -3,7 +3,7 @@
 vault {
   # This is the address of the Vault leader. The protocol (http(s)) portion
   # of the address is required.
-  address      = "https://VAULT_IP:8200"
+  address      = "http://VAULT_IP:8200"
 
   # This value can also be specified via the environment variable VAULT_TOKEN.
   token        = "TOKEN"

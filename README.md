@@ -7,9 +7,6 @@ Notes:
 
 2do:
 - TF: Save private key to AWS/ Vault Secrets
-- Git Hub: Clean up GitHub 
 - Vault: Enable Gossip Encryption for Nomad
     - https://developer.hashicorp.com/nomad/tutorials/transport-security/security-gossip-encryption
 - TF: Make all download URLs dynamic
-
-

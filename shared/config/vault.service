@@ -9,7 +9,7 @@ StartLimitBurst=3
 
 [Service]
 Type=notify
-EnvironmentFile=/etc/vault.d/vault.env
+EnvironmentFile=/etc/vault/vault.env
 User=vault
 Group=vault
 ProtectSystem=full
@@ -20,7 +20,7 @@ SecureBits=keep-caps
 AmbientCapabilities=CAP_IPC_LOCK
 CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 NoNewPrivileges=yes
-ExecStart=/usr/bin/vault server -config=/etc/vault.d/vault.hcl
+ExecStart=/usr/bin/vault server -config=/etc/vault/vault.hcl
 ExecReload=/bin/kill --signal HUP $MAINPID
 KillMode=process
 KillSignal=SIGINT

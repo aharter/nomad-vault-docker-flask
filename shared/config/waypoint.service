@@ -3,7 +3,7 @@ Description=Waypoint Server
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/waypoint server run -accept-tos
+ExecStart=/usr/local/bin/waypoint server run -accept-tos
 User=root
 Group=root
 Restart=always

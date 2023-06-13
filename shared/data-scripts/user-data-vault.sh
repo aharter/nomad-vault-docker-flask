@@ -17,7 +17,7 @@ echo "Starting jq install"
 sudo snap install jq
 
 # Prepare Vault Installation
-sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/vault.hcl
+sed -i "s|IP_ADDRESS|$IP_ADDRESS|g" $CONFIGDIR/vault.hcl
 sudo mkdir $VAULTCONFIGDIR
 sudo chmod 0755 $VAULTCONFIGDIR
 sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl

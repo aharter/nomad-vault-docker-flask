@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 ExecStart=/usr/bin/waypoint server run -accept-tos
-User=waypoint
-Group=waypoint
+User=root
+Group=root
 Restart=always
 RestartSec=5
 StartLimitInterval=60s

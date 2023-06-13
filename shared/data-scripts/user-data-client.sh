@@ -160,25 +160,6 @@ sudo systemctl start waypoint
 
 echo "Waypoint started"
 
-waypoint context create \
-  -server-addr=api.hashicorp.cloud:443 \
-  -server-auth-token=4VMwSUHgQATfhs6bcHawiGsE84mc2F3pv8wzptFVtdkepGGiEyQL9GxVGGGZbVip5puLntJZEiyqXAbNzuX7nTMKDqaYcDQAjjweWF2oeJZVtfPmfWkyZtjx27zWJ7ZvbfZ9H3CNbUxjauPGmJ6Y3J5PkPhfXvjRtzGHhX3RFPqHR8xTHBYwczYyitTHeqiuV8WKEwtUwbxenXtwBSFAU6eb6NiJbd8tRwwTzzziwVW3R2e9Y85m4NEC3NTvd5WAF6v1jh2YBWQ3egE4BFSP2fftxb3ftvQMG6NLMT2zaHkGs332GUWdNjFHb3NHpHofYjeWUpHAtxYuiPW5qRfpLLCXUzvkbCkd2SFNoSrnpxXQwGK3E7GVDAmkqNeHp2XK3EJMcvUQXoJKbBSi5AR8LZnno8xbHzAA6hnHmB3BjJxSk6j8WzQDSEV8tgVuKZ9FQsgkGkuJeT \
-  -server-require-auth=true \
-  -server-platform="hcp" \
-  -set-default \
-  hcp-nasenblick-org-nomad-vault-docker-flask
-
-echo "Waypoint Context Created"
-
-waypoint runner install \
-  -platform=nomad \
-  -server-addr=api.hashicorp.cloud:443 \
-  -nomad-runner-image=hashicorp/waypoint \
-  -nomad-host-volume=wp-runner-vol
-
-echo "Waypoint Runner Installed"
-
-
 # Add hostname to /etc/hosts
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
 

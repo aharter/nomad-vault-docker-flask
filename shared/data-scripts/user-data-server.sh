@@ -50,6 +50,7 @@ sudo apt-get clean
 # Disable the firewall
 sudo ufw disable || echo "ufw not installed"
 
+
 # Download and install Nomad
 curl -L $NOMADDOWNLOAD > nomad.zip
 sudo unzip nomad.zip -d /usr/local/bin

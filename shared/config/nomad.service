@@ -3,8 +3,8 @@ Description=Nomad
 Documentation=https://nomadproject.io/docs/
 Wants=network-online.target
 After=network-online.target
-#StartLimitIntervalSec=10
-StartLimitBurst=3
+StartLimitIntervalSec=3min
+StartLimitBurst=10
 
 [Service]
 ExecReload=/bin/kill -HUP $MAINPID

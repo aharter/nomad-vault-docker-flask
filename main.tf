@@ -195,12 +195,6 @@ resource "aws_key_pair" "generated_key" {
   public_key = tls_private_key.private_key.public_key_openssh
 }
 
-# resource "local_file" "tf_pem" {
-#    filename = "${path.module}/tf-key.pem"
-#    content = tls_private_key.private_key.private_key_pem
-#    file_permission = "0400"
-#  }
-
 resource "aws_instance" "server" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = var.server_instance_type

@@ -176,13 +176,6 @@ waypoint runner install \
 echo "Waypoint Runner Installed"
 
 
-# Install Waypoint runner (package)
-# echo "Starting Waypoint Installation"
-# wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-# echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-# sudo apt update && sudo apt install waypoint
-
-
 # Add hostname to /etc/hosts
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
 

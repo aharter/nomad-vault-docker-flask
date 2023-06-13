@@ -1,6 +1,7 @@
 .terraform/providers/
 .forlater.sh
 .howto.sh
+.waypoint.hcl
 example-app/
 jobs/
 outputs.tf

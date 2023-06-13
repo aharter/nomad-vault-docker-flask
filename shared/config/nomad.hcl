@@ -19,7 +19,7 @@ acl {
 server {
   enabled          = true
   bootstrap_expect = SERVER_COUNT
-#  rpc_upgrade_mode       = true
+  rpc_upgrade_mode       = true
 
 
   server_join {

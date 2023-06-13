@@ -56,6 +56,24 @@ sudo ufw disable || echo "ufw not installed"
 echo "Firewall disabled"
 
 
+# Download and install Nomad
+curl -L $NOMADDOWNLOAD > nomad.zip
+sudo unzip nomad.zip -d /usr/local/bin
+sudo chmod 0755 /usr/local/bin/nomad
+sudo chown root:root /usr/local/bin/nomad
+
+sudo mkdir -p $NOMADCONFIGDIR
+sudo chmod 755 $NOMADCONFIGDIR
+sudo mkdir -p $NOMADDIR
+sudo mkdir $NOMADDIR/templates
+sudo mkdir $NOMADDIR/cli-certs
+sudo mkdir $NOMADDIR/agent-certs
+sudo chmod -R 755 $NOMADDIR
+sudo chown -R root:root $NOMADDIR
+
+echo "Nomad downloaded and installed"
+
+
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
 sudo apt-get install -y apt-transport-https ca-certificates gnupg2 
@@ -85,21 +103,6 @@ echo "Plugins Installed"
 RETRY_JOIN="${retry_join}"
 DOCKER_BRIDGE_IP_ADDRESS=(`ifconfig docker0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`)
 
-
-# Download and install Nomad
-curl -L $NOMADDOWNLOAD > nomad.zip
-sudo unzip nomad.zip -d /usr/local/bin
-sudo chmod 0755 /usr/local/bin/nomad
-sudo chown root:root /usr/local/bin/nomad
-
-sudo mkdir -p $NOMADCONFIGDIR
-sudo chmod 755 $NOMADCONFIGDIR
-sudo mkdir -p $NOMADDIR
-sudo mkdir $NOMADDIR/templates
-sudo mkdir $NOMADDIR/cli-certs
-sudo mkdir $NOMADDIR/agent-certs
-sudo chmod -R 755 $NOMADDIR
-sudo chown -R root:root $NOMADDIR
 
 sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/nomad_client.hcl
 sed -i "s/RETRY_JOIN/$RETRY_JOIN/g" $CONFIGDIR/nomad_client.hcl

@@ -111,6 +111,7 @@ sudo chown root:root /usr/local/bin/consul-template
 echo "Consule-Template installed"
 
 sudo mkdir -p /etc/consul-template.d
+sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/consul-template.hcl
 sudo cp $CONFIGDIR/consul-template.hcl /etc/consul-template.d/consul-template.hcl
 sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
 sudo systemctl enable consul-template.service
@@ -135,8 +136,6 @@ sudo chmod -R 644 /opt/nomad/templates
 # echo "Waypoint Runner started"
 
 echo "Install Phase completed"
-
-# Install phase finish ---------------------------------------
 
 RETRY_JOIN="${retry_join}"
 DOCKER_BRIDGE_IP_ADDRESS=(`ifconfig docker0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`)

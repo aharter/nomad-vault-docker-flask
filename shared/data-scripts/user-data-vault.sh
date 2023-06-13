@@ -6,6 +6,7 @@ exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 
 
 CONFIGDIR="/ops/shared/config"
 VAULTCONFIGDIR="/etc/vault"
+IP_ADDRESS=$(curl http://instance-data/latest/meta-data/local-ipv4)
 
 # Prepare instance
 sudo apt update
@@ -15,22 +16,24 @@ sudo apt install unzip
 echo "Starting jq install"
 sudo snap install jq
 
-# # Install Vault from Binary
-# echo "Starting Vault Install"
-# wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-# echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-# sudo apt update && sudo apt install vault
-# echo "Concluded Vault Installation"
-
-# Configure Vault
+# Prepare Vault Installation
+sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/vault.hcl
 sudo mkdir $VAULTCONFIGDIR
 sudo chmod 0755 $VAULTCONFIGDIR
 sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
 sudo cp $CONFIGDIR/vault.service /usr/lib/systemd/system/vault.service
 export VAULT_ADDR="http://127.0.0.1:8200"
+echo "Concluded Vault Preparation"
+
+
+# # Install Vault from Binary
+# echo "Starting Vault Install"
+# wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+# echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+# sudo apt update && sudo apt install vault
 # sudo systemctl enable vault
 # sudo systemctl restart vault
-echo "Concluded Vault Preparation"
+# echo "Concluded Vault Installation"
 
 # # Initialize Vault and retrieve the initial root token
 # sudo vault operator init -key-shares=1 -key-threshold=1 > /tmp/vault_init_output

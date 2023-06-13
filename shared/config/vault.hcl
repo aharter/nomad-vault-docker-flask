@@ -22,7 +22,7 @@ listener "tcp" {
 
 # HTTPS listener
 #listener "tcp" {
-#  address       = "127.0.0.1:8200"
+#  address       = "IP_ADDRESS:8200"
 #  tls_cert_file = "/opt/vault/tls/tls.crt"
 #  tls_key_file  = "/opt/vault/tls/tls.key"
 #}

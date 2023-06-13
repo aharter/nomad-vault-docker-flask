@@ -13,8 +13,8 @@ HOW TO: Deploy Nomad jobs from your local CLI
 - nomad job run pytechco-employee.nomad.hcl
 
 HOW TO: Secure Nomad Cluster with Vault as CA
-- sudo nano /etc/vault.d/vault.hcl (Listeners)
 - export VAULT_SKIP_VERIFY=true
+- vault operator init -key-shares=1 -key-threshold=1
 - vault operator unseal
 - vault login
 - vault secrets enable pki
@@ -39,5 +39,4 @@ On all Nomad nodes
 - sudo nano /etc/consul-template.d/consul-template.hcl (IP & Token)
 - sudo systemctl start consul-template.service
 - sudo nano /etc/nomad.d/nomad.hcl (uncomment TLS & Server: rpc_upgrade_mode = true)
-- Nomad Server: sudo nano /etc/nomad.d/nomad.hcl (rpc_upgrade_mode = true)
 - sudo systemctl reload nomad

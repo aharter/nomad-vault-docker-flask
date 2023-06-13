@@ -14,7 +14,7 @@ NOMADCONFIGDIR="/etc/nomad.d"
 NOMADDIR="/opt/nomad"
 HOME_DIR="ubuntu"
 CLOUD_ENV=${cloud_env}
-
+VAULT_IP="${aws_instance.vault[0].private_ip}"
 
 # Install phase begin ---------------------------------------
 
@@ -137,7 +137,7 @@ sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
 
 sudo mkdir -p /etc/consul-template.d
-sed -i "s|IP_ADDRESS|$IP_ADDRESS|g" $CONFIGDIR/consul-template.hcl
+sed -i "s|VAULT_IP|$VAULT_IP|g" $CONFIGDIR/consul-template.hcl
 sudo cp $CONFIGDIR/consul-template.hcl /etc/consul-template.d/consul-template.hcl
 sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
 sudo cp $CONFIGDIR/templates/NomadClients/* /opt/nomad/templates

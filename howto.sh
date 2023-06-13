@@ -14,7 +14,7 @@ nomad job run pytechco-employee.nomad.hcl
 
 HOW TO: Secure Nomad Cluster with Vault as CA
 (export VAULT_SKIP_VERIFY=true)
-export VAULT_ADDR="http://VAULT_IP:8200"
+export VAULT_ADDR="http://VAULT_IP:8200" <- use private IP & port
 vault operator init -key-shares=1 -key-threshold=1
 vault operator unseal
 vault login

@@ -1,5 +1,6 @@
 .terraform/providers/
 .forlater.sh
+.howto.sh
 example-app/
 jobs/
 outputs.tf

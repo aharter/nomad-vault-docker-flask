@@ -73,6 +73,7 @@ sudo chown -R root:root /nomad/host-volumes/wp-runner
 
 echo "Nomad downloaded and installed"
 
+
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
 sudo apt-get install -y apt-transport-https ca-certificates gnupg2 
@@ -83,6 +84,7 @@ sudo apt-get install -y docker-ce
 
 echo "Docker installed"
 
+
 # Java
 sudo add-apt-repository -y ppa:openjdk-r/ppa
 sudo apt-get update 
@@ -90,6 +92,7 @@ sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
 
 echo "Java installed"
+
 
 # Install consul-template
 echo "Starting Consul-Template Installation"
@@ -111,6 +114,7 @@ echo "Consule-Template started"
 
 # Install phase finish ---------------------------------------
 
+
 # Server setup phase begin -----------------------------------
 SERVER_COUNT=${server_count}
 RETRY_JOIN="${retry_join}"
@@ -124,6 +128,7 @@ echo "Nomad configured"
 
 sudo systemctl enable nomad.service
 sudo systemctl start nomad.service
+
 
 # Wait for Nomad to restart
 for i in {1..9}; do
@@ -162,6 +167,7 @@ nomad acl bootstrap | grep -i secret | awk -F "=" '{print $2}' | xargs > nomad-m
 export NOMAD_TOKEN=$(cat nomad-management.token)
 nomad server members >> /var/log/user-data.log
 echo "NOMAD_TOKEN: $NOMAD_TOKEN" >> /var/log/user-data.log
+
 
 # Server setup phase finish -----------------------------------
 echo "Server setup finished"

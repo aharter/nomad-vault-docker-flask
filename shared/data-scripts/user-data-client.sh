@@ -14,7 +14,7 @@ NOMADCONFIGDIR="/etc/nomad.d"
 NOMADDIR="/opt/nomad"
 HOME_DIR="ubuntu"
 CLOUD_ENV=${cloud_env}
-VAULT_IP="${vault_private_ip}"
+VAULT_IP=${vault_private_ip}
 
 # Install phase begin ---------------------------------------
 
@@ -83,12 +83,14 @@ sudo apt-get update
 sudo apt-get install -y docker-ce
 echo "Docker Installed"
 
+
 # Java
 sudo add-apt-repository -y ppa:openjdk-r/ppa
 sudo apt-get update 
 sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
 echo "Java Installed"
+
 
 # CNI plugins
 curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/releases/download/v1.0.0/cni-plugins-linux-$( [ $(uname -m) = aarch64 ] && echo arm64 || echo amd64)"-v1.0.0.tgz
@@ -102,7 +104,6 @@ echo "Plugins Installed"
 
 RETRY_JOIN="${retry_join}"
 DOCKER_BRIDGE_IP_ADDRESS=(`ifconfig docker0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`)
-
 
 sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/nomad_client.hcl
 sed -i "s/RETRY_JOIN/$RETRY_JOIN/g" $CONFIGDIR/nomad_client.hcl

@@ -8,6 +8,7 @@ CONFIGDIR="/ops/shared/config"
 VAULTCONFIGDIR="/etc/vault.d"
 IP_ADDRESS=$(curl http://instance-data/latest/meta-data/local-ipv4)
 
+
 # Prepare instance
 sudo apt update
 sudo apt install unzip
@@ -35,6 +36,7 @@ sudo systemctl enable vault
 sudo systemctl restart vault
 
 echo "Vault started"
+
 
 # Initialize Vault and retrieve the initial root token
 # sudo vault operator init -key-shares=1 -key-threshold=1 > /tmp/vault_init_output

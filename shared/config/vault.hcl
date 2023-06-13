@@ -1,6 +1,12 @@
-# Full configuration options can be found at https://www.vaultproject.io/docs/configuration
+# Value for IP_ADDRESS are
+# placed here during Terraform setup and come from the 
+# ../shared/data-scripts/user-data-vault.sh script
+# Full configuration options can be found at 
+# https://www.vaultproject.io/docs/configuration
 
 ui = true
+api_addr = "http://IP_ADDRESS:8200"
+cluster_addr = "https://IP_ADDRESS:8201"
 
 #mlock = true
 #disable_mlock = true
@@ -15,17 +21,17 @@ storage "file" {
 #}
 
 # HTTP listener
-#listener "tcp" {
-#  address = "IP_ADDRESS:8200"
-#  tls_disable = 1
-#}
+listener "tcp" {
+  address = "IP_ADDRESS:8200"
+  tls_disable = 1
+}
 
 # HTTPS listener
-listener "tcp" {
-  address       = "IP_ADDRESS:8200"
-  tls_cert_file = "/opt/vault/tls/tls.crt"
-  tls_key_file  = "/opt/vault/tls/tls.key"
-}
+#listener "tcp" {
+#  address       = "IP_ADDRESS:8200"
+#  tls_cert_file = "/opt/vault/tls/tls.crt"
+#  tls_key_file  = "/opt/vault/tls/tls.key"
+#}
 
 # Enterprise license_path
 # This will be required for enterprise as of v1.8

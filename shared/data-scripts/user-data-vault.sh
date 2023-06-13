@@ -31,6 +31,7 @@ sed -i "s|IP_ADDRESS|$IP_ADDRESS|g" $CONFIGDIR/vault.hcl
 sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR/vault.hcl
 sudo mkdir -p /usr/lib/systemd/system
 sudo cp $CONFIGDIR/vault.service /usr/lib/systemd/system/vault.service
+export VAULT_ADDR="$IP_ADDRESS"
 
 sudo systemctl enable vault
 sudo systemctl restart vault

@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-
 exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 ACL_DIRECTORY="/ops/shared/config"
@@ -16,9 +15,6 @@ HOME_DIR="ubuntu"
 CLOUD_ENV=${cloud_env}
 
 # Install phase begin ---------------------------------------
-echo "Beginning Installation"
-sudo apt update
-sudo apt install unzip
 
 # Install dependencies
 case $CLOUD_ENV in
@@ -50,13 +46,12 @@ sudo apt-get update
 sudo apt-get install -y unzip tree redis-tools jq curl tmux
 sudo apt-get clean
 
-# Disable the firewall
 
+# Disable the firewall
 sudo ufw disable || echo "ufw not installed"
 
 # Download and install Nomad
 curl -L $NOMADDOWNLOAD > nomad.zip
-
 sudo unzip nomad.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/nomad
 sudo chown root:root /usr/local/bin/nomad
@@ -69,13 +64,12 @@ sudo mkdir $NOMADDIR/cli-certs
 sudo mkdir $NOMADDIR/agent-certs
 sudo chmod -R 755 $NOMADDIR
 sudo chown -R root:root $NOMADDIR
-echo "Nomad downloaded and installed"
-
-
 sudo mkdir -p /nomad/host-volumes/wp-server
 sudo mkdir -p /nomad/host-volumes/wp-runner
 sudo chmod -R 755 /nomad/host-volumes/wp-runner
 sudo chown -R root:root /nomad/host-volumes/wp-runner
+
+echo "Nomad downloaded and installed"
 
 # Docker
 distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
@@ -85,11 +79,15 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$${d
 sudo apt-get update
 sudo apt-get install -y docker-ce
 
+echo "Docker installed"
+
 # Java
 sudo add-apt-repository -y ppa:openjdk-r/ppa
 sudo apt-get update 
 sudo apt-get install -y openjdk-8-jdk
 JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+
+echo "Java installed"
 
 # Install consul-template
 echo "Starting Consul-Template Installation"
@@ -97,22 +95,19 @@ sudo curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-templa
 sudo unzip consul-template.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/consul-template
 sudo chown root:root /usr/local/bin/consul-template
-echo "Consule-Template installed"
-
 sudo mkdir -p /etc/consul-template.d
 sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/consul-template.hcl
 sudo cp $CONFIGDIR/consul-template.hcl /etc/consul-template.d/consul-template.hcl
 sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
+sudo cp $CONFIGDIR/templates/NomadServers/* /opt/nomad/templates
+sudo chmod -R 644 /opt/nomad/templates
+
 sudo systemctl enable consul-template.service
 sudo systemctl start consul-template.service
 
-# Copy template files for consult-template
-sudo cp $CONFIGDIR/templates/NomadServers/* /opt/nomad/templates
-sudo chmod -R 644 /opt/nomad/templates 
+echo "Consule-Template started"
 
 # Install phase finish ---------------------------------------
-
-echo "Install complete"
 
 # Server setup phase begin -----------------------------------
 SERVER_COUNT=${server_count}
@@ -142,17 +137,18 @@ for i in {1..9}; do
     fi
 done
 
-export NOMAD_ADDR=http://$IP_ADDRESS:4646
 
 # Add hostname to /etc/hosts
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
 echo "Hostname Added"
+
 
 # Add Docker bridge network IP to /etc/resolv.conf (at the top)
 echo "nameserver $DOCKER_BRIDGE_IP_ADDRESS" | sudo tee /etc/resolv.conf.new
 cat /etc/resolv.conf | sudo tee --append /etc/resolv.conf.new
 sudo mv /etc/resolv.conf.new /etc/resolv.conf
 echo "Docker bridge network ip added"
+
 
 # Set env vars
 echo "export NOMAD_ADDR=http://$IP_ADDRESS:4646" | sudo tee --append /home/$HOME_DIR/.bashrc

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -e
-
 exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+
 
 ACL_DIRECTORY="/ops/shared/config"
 NOMAD_BOOTSTRAP_TOKEN="/tmp/nomad_bootstrap"
@@ -15,10 +15,8 @@ NOMADDIR="/opt/nomad"
 HOME_DIR="ubuntu"
 CLOUD_ENV=${cloud_env}
 
+
 # Install phase begin ---------------------------------------
-echo "Beginning Installation"
-sudo apt update
-sudo apt install unzip
 
 # Install dependencies
 case $CLOUD_ENV in
@@ -46,21 +44,50 @@ case $CLOUD_ENV in
     ;;
 esac
 
-sudo apt-get update
+
+# Install Dependencies
 sudo apt-get install -y unzip tree redis-tools jq curl tmux
 sudo apt-get clean
-
 echo "Dependencies installed"
 
+
 # Disable the firewall
-
 sudo ufw disable || echo "ufw not installed"
-
 echo "Firewall disabled"
+
+
+# Docker
+distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
+sudo apt-get install -y apt-transport-https ca-certificates gnupg2 
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$${distro} $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install -y docker-ce
+echo "Docker Installed"
+
+# Java
+sudo add-apt-repository -y ppa:openjdk-r/ppa
+sudo apt-get update 
+sudo apt-get install -y openjdk-8-jdk
+JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+echo "Java Installed"
+
+# CNI plugins
+curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/releases/download/v1.0.0/cni-plugins-linux-$( [ $(uname -m) = aarch64 ] && echo arm64 || echo amd64)"-v1.0.0.tgz
+sudo mkdir -p /opt/cni/bin
+sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz
+
+echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-arptables
+echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-ip6tables
+echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-iptables
+echo "Plugins Installed"
+
+RETRY_JOIN="${retry_join}"
+DOCKER_BRIDGE_IP_ADDRESS=(`ifconfig docker0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`)
+
 
 # Download and install Nomad
 curl -L $NOMADDOWNLOAD > nomad.zip
-
 sudo unzip nomad.zip -d /usr/local/bin
 sudo chmod 0755 /usr/local/bin/nomad
 sudo chown root:root /usr/local/bin/nomad
@@ -73,84 +100,18 @@ sudo mkdir $NOMADDIR/cli-certs
 sudo mkdir $NOMADDIR/agent-certs
 sudo chmod -R 755 $NOMADDIR
 sudo chown -R root:root $NOMADDIR
-echo "Nomad downloaded and installed"
-
-# Docker
-distro=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
-sudo apt-get install -y apt-transport-https ca-certificates gnupg2 
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$${distro} $(lsb_release -cs) stable"
-sudo apt-get update
-sudo apt-get install -y docker-ce
-
-echo "Docker Installed"
-
-# Java
-sudo add-apt-repository -y ppa:openjdk-r/ppa
-sudo apt-get update 
-sudo apt-get install -y openjdk-8-jdk
-JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
-
-echo "Java Installed"
-
-# CNI plugins
-curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/releases/download/v1.0.0/cni-plugins-linux-$( [ $(uname -m) = aarch64 ] && echo arm64 || echo amd64)"-v1.0.0.tgz
-sudo mkdir -p /opt/cni/bin
-sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz
-
-echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-arptables
-echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-ip6tables
-echo 1 | sudo tee /proc/sys/net/bridge/bridge-nf-call-iptables
-
-# Install consul-template
-echo "Starting Consul-Template Installation"
-sudo curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.32.0_linux_amd64.zip > consul-template.zip
-sudo unzip consul-template.zip -d /usr/local/bin
-sudo chmod 0755 /usr/local/bin/consul-template
-sudo chown root:root /usr/local/bin/consul-template
-echo "Consule-Template installed"
-
-sudo mkdir -p /etc/consul-template.d
-sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/consul-template.hcl
-sudo cp $CONFIGDIR/consul-template.hcl /etc/consul-template.d/consul-template.hcl
-sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
-sudo systemctl enable consul-template.service
-sudo systemctl start consul-template.service
-
-# Copy template files for consult-template
-sudo cp $CONFIGDIR/templates/NomadClients/* /opt/nomad/templates
-sudo chmod -R 644 /opt/nomad/templates
-
-## Install Waypoint runner
-# echo "Starting Waypoint Runner Installation"
-# wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-# echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-# sudo apt update && sudo apt install waypoint
-# sudo curl -L https://releases.hashicorp.com/waypoint/0.11.0/waypoint_0.11.0_linux_amd64.zip > waypoint.zip
-# sudo unzip waypoint.zip -d /usr/local/bin
-# sudo cp $CONFIGDIR/waypoint.service /etc/systemd/system/waypoint.service
-# sudo mkdir -p /nomad/host-volumes/wp-server
-# sudo mkdir -p /nomad/host-volumes/wp-runner
-# sudo systemctl enable waypoint
-# sudo systemctl start waypoint
-# echo "Waypoint Runner started"
-
-echo "Install Phase completed"
-
-RETRY_JOIN="${retry_join}"
-DOCKER_BRIDGE_IP_ADDRESS=(`ifconfig docker0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`)
 
 sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/nomad_client.hcl
 sed -i "s/RETRY_JOIN/$RETRY_JOIN/g" $CONFIGDIR/nomad_client.hcl
 sudo cp $CONFIGDIR/nomad_client.hcl $NOMADCONFIGDIR/nomad.hcl
 sudo cp $CONFIGDIR/nomad.service /etc/systemd/system/nomad.service
 
+echo "Nomad configured"
+
 sudo systemctl enable nomad.service
 sudo systemctl start nomad.service
 
-echo "Nomad restarting"
-
-# Wait for Nomad to restart
+# Wait for Nomad to start
 for i in {1..9}; do
     # capture stdout and stderr
     sleep 1
@@ -159,31 +120,88 @@ for i in {1..9}; do
         echo "Error occurred: $OUTPUT"
         continue
     else
-        echo "Nomad restarted"
+        echo "Nomad Started"
         break
     fi
 done
 
-export NOMAD_ADDR=http://$IP_ADDRESS:4646
+
+# Install consul-template
+echo "Starting Consul-Template Installation"
+sudo curl -L https://releases.hashicorp.com/consul-template/0.32.0/consul-template_0.32.0_linux_amd64.zip > consul-template.zip
+sudo unzip consul-template.zip -d /usr/local/bin
+sudo chmod 0755 /usr/local/bin/consul-template
+sudo chown root:root /usr/local/bin/consul-template
+
+sudo mkdir -p /etc/consul-template.d
+sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/consul-template.hcl
+sudo cp $CONFIGDIR/consul-template.hcl /etc/consul-template.d/consul-template.hcl
+sudo cp $CONFIGDIR/consul-template.service /etc/systemd/system/consul-template.service
+sudo cp $CONFIGDIR/templates/NomadClients/* /opt/nomad/templates
+sudo chmod -R 644 /opt/nomad/templates
+
+sudo systemctl enable consul-template.service
+sudo systemctl start consul-template.service
+
+echo "Consule-Template Started"
+
+
+## Install Waypoint (binary)
+sudo curl -L https://releases.hashicorp.com/waypoint/0.11.0/waypoint_0.11.0_linux_amd64.zip > waypoint.zip
+sudo unzip waypoint.zip -d /usr/local/bin
+sudo cp $CONFIGDIR/waypoint.service /etc/systemd/system/waypoint.service
+sudo mkdir -p /nomad/host-volumes/wp-server
+sudo mkdir -p /nomad/host-volumes/wp-runner
+sudo systemctl enable waypoint
+sudo systemctl start waypoint
+
+echo "Waypoint started"
+
+waypoint context create \
+  -server-addr=api.hashicorp.cloud:443 \
+  -server-auth-token=4VMwSUHgQATcRycb7Dv8reVJzcgW4Lzm6apibZK2xtC6a8JQ75ZU4d6Legk2Auq6taQXmvxpqXTxB35fTN2DPCXR88S1z87gbBg7RdcNZUuYBza3pygwCkxsUAEH62u4x53vgKHy4fRJX7bVRQm6WHaJEzmcC8XiQfKxrSUDge9EMKZtFaD1yHsff2hfBZoxWKypog4ZJHLKJfjZLsaxHLovgMHbhfbiiMt1QuPRg3AFeKAWJrSvgzLMCkke9ujeqnncWGq1PF87Be8SAcApTPx5t6AjaJxb66twdhemjMr46wofVza176sQjpfecNzgyBeAksAE46M7Zt9nyqVUpHvxbWAgbMGhZmHGqTdM1dhJVnmC5oDhAY2Kb48WWb9w2vtpda65yQyprscR6giaZjqbnZ2iMQaPWYuMGxocLDyzqUNUsgxnzVkQCxiEV6F5aKwvRymhYB \
+  -server-require-auth=true \
+  -server-platform="hcp" \
+  -set-default \
+  hcp-nasenblick-org-nomad-vault-docker-flask
+
+echo "Waypoint Context Created"
+
+waypoint runner install \
+  -platform=nomad \
+  -server-addr=api.hashicorp.cloud:443 \
+  -nomad-runner-image=hashicorp/waypoint \
+  -nomad-host-volume=wp-runner-vol
+
+echo "Waypoint Runner Installed"
+
+
+  ## Install Waypoint runner (package)
+# echo "Starting Waypoint Installation"
+# wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+# echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+# sudo apt update && sudo apt install waypoint
 
 
 # Add hostname to /etc/hosts
-
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts
 
 echo "Hostname added"
 
-# Add Docker bridge network IP to /etc/resolv.conf (at the top)
 
+# Add Docker bridge network IP to /etc/resolv.conf (at the top)
 echo "nameserver $DOCKER_BRIDGE_IP_ADDRESS" | sudo tee /etc/resolv.conf.new
 cat /etc/resolv.conf | sudo tee --append /etc/resolv.conf.new
 sudo mv /etc/resolv.conf.new /etc/resolv.conf
 
 echo "Docker bridge network ip added"
 
+
 # Set env vars
 echo "export NOMAD_ADDR=http://$IP_ADDRESS:4646" | sudo tee --append /home/$HOME_DIR/.bashrc
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --append /home/$HOME_DIR/.bashrc
 
-echo "Server setup finished"
+
 # Server setup phase finish -----------------------------------
+echo "Server setup finished"
+

@@ -176,7 +176,7 @@ waypoint runner install \
 echo "Waypoint Runner Installed"
 
 
-  ## Install Waypoint runner (package)
+# Install Waypoint runner (package)
 # echo "Starting Waypoint Installation"
 # wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 # echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
@@ -204,4 +204,3 @@ echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --appe
 
 # Server setup phase finish -----------------------------------
 echo "Server setup finished"
-

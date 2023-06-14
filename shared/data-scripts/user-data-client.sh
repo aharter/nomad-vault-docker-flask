@@ -150,7 +150,7 @@ sudo systemctl start consul-template.service
 echo "Consule-Template Started"
 
 
-## Install Waypoint (binary)
+## Install Waypoint 0.11.0 (binary)
 sudo curl -L https://releases.hashicorp.com/waypoint/0.11.0/waypoint_0.11.0_linux_amd64.zip > waypoint.zip
 sudo unzip waypoint.zip -d /usr/local/bin
 sudo cp $CONFIGDIR/waypoint.service /etc/systemd/system/waypoint.service
@@ -160,6 +160,15 @@ sudo systemctl enable waypoint
 sudo systemctl start waypoint
 
 echo "Waypoint started"
+
+
+## Install Pack
+curl -LO https://github.com/buildpacks/pack/releases/latest/download/pack-linux.tgz
+sudo tar xvf pack-linux.tgz
+sudo mv pack /usr/local/bin/
+
+echo "Pack installed"
+
 
 # Add hostname to /etc/hosts
 echo "127.0.0.1 $(hostname)" | sudo tee --append /etc/hosts

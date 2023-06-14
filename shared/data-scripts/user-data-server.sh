@@ -112,6 +112,17 @@ sudo systemctl start consul-template.service
 
 echo "Consule-Template started"
 
+
+# Install Waypoint runner (package)
+echo "Starting Waypoint Installation"
+sudo curl -L https://releases.hashicorp.com/waypoint/0.11.0/waypoint_0.11.0_linux_amd64.zip > waypoint.zip
+sudo unzip waypoint.zip -d /usr/local/bin
+sudo chmod 0755 /usr/local/bin/waypoint
+sudo chown root:root /usr/local/bin/waypoint
+
+echo "Waypoint Installed"
+
+echo "Waypoint Installed"
 # Install phase finish ---------------------------------------
 
 

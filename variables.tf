@@ -20,7 +20,7 @@ variable "server_instance_type" {
 
 variable "client_instance_type" {
   description = "The AWS instance type to use for nomad clients."
-  default     = "t2.micro"
+  default     = "t2.small"
 }
 
 variable "vault_instance_type" {

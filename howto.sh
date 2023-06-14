@@ -37,7 +37,7 @@ sudo nano tls-policy.hcl:
 
 path "pki_int/issue/nomad-cluster" {
   capabilities = ["update"]
-  }
+}
 
 vault policy write tls-policy tls-policy.hcl
 MAKE NOTE OF TOKEN: vault token create -policy="tls-policy" -period=24h -orphan

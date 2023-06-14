@@ -163,9 +163,8 @@ echo "Waypoint started"
 
 
 ## Install Pack
-curl -LO https://github.com/buildpacks/pack/releases/latest/download/pack-linux.tgz
-sudo tar xvf pack-linux.tgz
-sudo mv pack /usr/local/bin/
+sudo add-apt-repository ppa:cncf-buildpacks/pack-cli
+sudo apt-get install pack-cli
 
 echo "Pack installed"
 

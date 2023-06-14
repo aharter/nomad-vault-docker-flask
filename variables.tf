@@ -15,7 +15,7 @@ variable "allowlist_ip" {
 
 variable "server_instance_type" {
   description = "The AWS instance type to use for nomad servers."
-  default     = "t2.micro"
+  default     = "t2.small"
 }
 
 variable "client_instance_type" {

@@ -20,7 +20,7 @@ variable "server_instance_type" {
 
 variable "client_instance_type" {
   description = "The AWS instance type to use for nomad clients."
-  default     = "t2.small"
+  default     = "t2.medium"
 }
 
 variable "vault_instance_type" {
@@ -35,7 +35,7 @@ variable "server_count" {
 
 variable "client_count" {
   description = "The number of clients to provision."
-  default     = "2"
+  default     = "1"
 }
 
 variable "vault_count" {

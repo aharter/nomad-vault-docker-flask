@@ -1,3 +1,3 @@
-Terraform for setting up and running a secure (mTLS) Nomad Cluster with Vault as CA using self-signed certificates via Consul-Template. You can access the Nomad- and Vault UI on their public IPs, see output.tf for details. 
+Terraform (Cloud) for setting up and running a secure (mTLS) Nomad Cluster with Vault as CA using self-signed certificates via Consul-Template. You can access the Nomad- and Vault UI on their public IPs, see output.tf for details. You can deploy the Flask demo app on the CLI (see howto.txt) and access it on port 5000 of the nomad cluster. For SSH access to the individual instances look for the .PEM private key in the statefile.
 
-This is NOT a production setup.
+This is NOT a production setup but still costs money when run on AWS outside of free usage tiers.

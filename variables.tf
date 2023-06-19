@@ -68,6 +68,7 @@ variable "VAULT_TOKEN" {
   default     = "empty"
 }
 
+
 # variable "private_key_output"{
 #   description = "SSH privat key for accessing instances"
 #   default = "empty"

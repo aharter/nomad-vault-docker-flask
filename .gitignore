@@ -1,1 +1,8 @@
 .terraform/providers/
+.forlater.sh
+.waypoint.hcl
+example-app/
+jobs/
+outputs.tf
+tf-key.pem
+.DS_Store

@@ -19,8 +19,22 @@ acl {
 server {
   enabled          = true
   bootstrap_expect = SERVER_COUNT
+ # rpc_upgrade_mode       = true
+
 
   server_join {
     retry_join = ["RETRY_JOIN"]
   }
 }
+
+// tls {
+//   http = true
+//   rpc  = true
+
+//   ca_file   = "/opt/nomad/agent-certs/ca.crt"
+//   cert_file = "/opt/nomad/agent-certs/agent.crt"
+//   key_file  = "/opt/nomad/agent-certs/agent.key"
+
+//   verify_server_hostname = true
+//   verify_https_client    = true
+// }

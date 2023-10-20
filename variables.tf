@@ -15,17 +15,17 @@ variable "allowlist_ip" {
 
 variable "server_instance_type" {
   description = "The AWS instance type to use for nomad servers."
-  default     = "t2.nano"
+  default     = "t2.small"
 }
 
 variable "client_instance_type" {
   description = "The AWS instance type to use for nomad clients."
-  default     = "t2.nano"
+  default     = "t2.medium"
 }
 
 variable "vault_instance_type" {
   description = "The AWS instance type to use for vault instances."
-  default     = "t2.nano"
+  default     = "t2.micro"
 }
 
 variable "server_count" {
@@ -53,7 +53,34 @@ variable "nomad_version" {
   default     = "1.5.0"
 }
 
-variable "vault_version" {
+variable "VAULT_VERSION" {
   description = "The version of the Vault binary to install."
   default     = "1.13.2"
 }
+
+variable "VAULT_DOWNLOAD" {
+  description = "The version of the Vault binary to install."
+  default     = "empty"
+}
+
+variable "VAULT_TOKEN" {
+  description = "The version of the Vault binary to install."
+  default     = "empty"
+}
+
+
+# variable "private_key_output"{
+#   description = "SSH privat key for accessing instances"
+#   default = "empty"
+# }
+
+# variable "aws_ssh_public_key" {
+#   description = "SSH public key for accessing the instance"
+#   type        = string
+# }
+
+# variable "private_key" {
+#   description = "SSH private key for accessing the instance"
+#   type        = string
+# }
+

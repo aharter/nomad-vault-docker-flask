@@ -1,0 +1,16 @@
+[Unit]
+Description=Consul Template
+Documentation=https://www.consul.io/
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/consul-template -config=/etc/consul-template.d/consul-template.hcl
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+Restart=on-failure
+RestartSec=5s
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

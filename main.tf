@@ -1,8 +1,9 @@
 terraform {
-      cloud {
+  cloud {
     organization = "nasenblick"
+
     workspaces {
-      name = "nomad-vault-react"
+      name = "nomad-vault-docker-flask"
     }
   }
 
@@ -12,7 +13,6 @@ terraform {
       version = "~> 4.16"
     }
   }
-
   required_version = ">= 1.2.0"
 }
 
@@ -143,6 +143,19 @@ resource "aws_security_group" "vault_ingress" {
     from_port   = 8200
     to_port     = 8200
     protocol    = "tcp"
+    cidr_blocks = [var.allowlist_ip]
+  }
+  ingress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    self      = true
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -181,18 +194,6 @@ resource "aws_key_pair" "generated_key" {
   key_name   = "tf-key"
   public_key = tls_private_key.private_key.public_key_openssh
 }
-
-# Uncomment the private key resource below if you want to SSH to any of the instances
-# Run init and apply again after uncommenting:
-# terraform init && terraform apply
-# Then SSH with the tf-key.pem file:
-# ssh -i tf-key.pem ubuntu@INSTANCE_PUBLIC_IP
-#
-#resource "local_file" "tf_pem" {
-#   filename = "${path.module}/tf-key.pem"
-#   content = tls_private_key.private_key.private_key_pem
-#   file_permission = "0400"
-# }
 
 resource "aws_instance" "server" {
   ami                    = data.aws_ami.ubuntu.id
@@ -241,10 +242,10 @@ resource "aws_instance" "server" {
     region                    = var.region
     cloud_env                 = "aws"
     retry_join                = local.retry_join
+    NOMADVERSION             = var.nomad_version
     nomad_version             = var.nomad_version
-    #additional_file_content   = file("shared/data-scripts/user-data-consul-template.sh")
+    vault_private_ip = aws_instance.vault[0].private_ip
   })
-
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 
   metadata_options {
@@ -286,13 +287,6 @@ resource "aws_instance" "client" {
     delete_on_termination = "true"
   }
 
-  /*ebs_block_device {
-    device_name           = "/dev/xvdd"
-    volume_type           = "gp2"
-    volume_size           = "50"
-    delete_on_termination = "true"
-  }*/
-
   provisioner "remote-exec" {
     inline = ["sudo mkdir -p /ops", "sudo chmod 777 -R /ops"]
   }
@@ -307,7 +301,8 @@ resource "aws_instance" "client" {
     cloud_env                 = "aws"
     retry_join                = local.retry_join
     nomad_version             = var.nomad_version
-    #additional_file_content   = file("shared/data-scripts/user-data-consul-template.sh")
+    NOMADVERSION             = var.nomad_version
+    vault_private_ip = aws_instance.vault[0].private_ip
   })
   iam_instance_profile = aws_iam_instance_profile.instance_profile.name
 
@@ -323,6 +318,7 @@ resource "aws_instance" "vault" {
   key_name               = aws_key_pair.generated_key.key_name
   vpc_security_group_ids = [aws_security_group.vault_ingress.id, aws_security_group.ssh_ingress.id, aws_security_group.allow_all_internal.id]
   count                  = var.vault_count
+  user_data_replace_on_change = true
 
   connection {
     type        = "ssh"
@@ -330,9 +326,34 @@ resource "aws_instance" "vault" {
     private_key = tls_private_key.private_key.private_key_pem
     host        = self.public_ip
   }
-iam_instance_profile = aws_iam_instance_profile.instance_profile.name
-}
 
+  tags = {
+    "Name" = "${var.name}-vault"
+  }
+
+  root_block_device {
+    volume_type           = "gp2"
+    volume_size           = var.root_block_device_size
+    delete_on_termination = "true"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sudo mkdir -p /ops", "sudo chmod 777 -R /ops"]
+  }
+
+  provisioner "file" {
+    source      = "shared"
+    destination = "/ops"
+  }
+
+  user_data = templatefile("shared/data-scripts/user-data-vault.sh", {
+    VAULT_VERSION              = var.VAULT_VERSION
+    VAULT_DOWNLOAD             = var.VAULT_DOWNLOAD
+    VAULT_TOKEN                = var.VAULT_TOKEN
+  })
+
+  iam_instance_profile = aws_iam_instance_profile.instance_profile.name
+}
 
 resource "aws_iam_instance_profile" "instance_profile" {
   name_prefix = var.name

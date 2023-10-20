@@ -1,13 +1,3 @@
-Set up a nomad server with terraform on AWS with its own CA and a React Web App being served via HTTPS.
+Terraform (Cloud) for setting up and running a secure (mTLS) Nomad Cluster with Vault as CA using self-signed certificates via Consul-Template. You can access the Nomad- and Vault UI on their public IPs, see output.tf for details. You can deploy the Flask demo app on the CLI (see howto.txt) and access it on port 5000 of the nomad cluster. For SSH access to the individual instances look for the .PEM private key in the statefile.
 
-1: Set up infrastructure (push to remote origina to trigger terraform)
-2: Set up the three instances
-    Nomad Server: 
-        Install & configure nomad
-        Install & configure nginx as reverse proxy
-        Install & configure node.js & nvm
-        Install & configure React.js
-    Nomad Client:
-        Install & configure nomad
-    Vault Server:
-        Install & configure vault
+This is NOT a production setup but still costs money when run on AWS outside of free usage tiers.
